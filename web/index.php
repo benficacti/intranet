@@ -16,20 +16,23 @@ if (!isset($_SESSION['login'])) {
         <title></title>
     </head>
     <body>
-        <div class="d-flex backbenfacil" id="wrapper" >
+        <div class="d-flex" id="wrapper" >
             <!-- Sidebar -->
-          <?php
-          
-          include 'includes/sidebar.php';
-          ?>
 
             <!-- Page Content -->
             <div id="page-content-wrapper">
            
                 <div class="container-fluid">
-                    
-                    
-                    
+                    <div class="row back_top_logo"  >
+                        <div class="texto_logo">
+                            <span class="custom_size_logo">
+                                INTRANET
+                            </span>
+                        </div>
+                    </div>  
+                    <div class="row corpo_menu_home">
+                        
+                    </div>
                 </div>
             </div>
             <!-- /#page-content-wrapper -->
