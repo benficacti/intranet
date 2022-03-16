@@ -68,10 +68,80 @@ body{
     background: -webkit-linear-gradient(rgba(128,61,209,1), rgba(98,0,255,1));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
 }
+
+
+
+
 .corpo_menu_home{
     background: rgb(255,255,255);
-
-    height:65vh!important;
+    height:89vh!important;
     width:100vw;
+    float:left !important;
+    overflow-y: scroll;
+
+}
+
+.texto_titulo_menu{
+    width:100vw;
+    height:5vh;
+    float:left !important;
+    margin-top:5vh;
+
+}
+.custom_size_titulo_menu{
+    font-family: "SergoeUI";
+    font-size: 2vw;
+    background: -webkit-linear-gradient(#888, #CCC);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-left:2vw;
+     float:left !important;
+     text-align: center;
+     width:100vw;
+}
+.card_size{
+    min-width: 10vh!important;
+    height:auto;
+    float:left !important;
+    width:100vw;
+    margin-left:0px!important;
+    padding:0px!important;
+   
+}
+.menu_home_item{
+    width:19.6vw;
+    height:22vh;
+    float:left !important;
+
+}
+.imagem_icone{
+    width:100%;
+     height:17vh;
+    float:left !important;
+}
+.text_icone{
+     width:100%;
+     height:5vh;
+    float:left !important;
+     text-align: center;
+}
+
+.text_menu_custom{
+      font-family: "SergoeUI";
+    font-size: 2vw;
+    background: -webkit-linear-gradient(#803DD1, #6200FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    width:100%;
+}
+.img_vector{
+    width:10vw;
+    height:10vw;
+    margin-left: 5vw;
+    fill: url(#gradient) #447799;
+}
+#item_vector{
+    
 }
