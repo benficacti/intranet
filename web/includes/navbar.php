@@ -1,13 +1,21 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="col-4">
-        <button class="btn btn-primary" id="menu-toggle"><i class="fad fa-align-justify"></i></button>
+        <button class="btn btn-primary" id="menu-toggle">ESCONDER MENU</button>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 
     <div class="col-4 text-center">
-       
+        <label class="lbl-data-hora">
+
+            <?php
+            date_default_timezone_set("America/Sao_Paulo");
+            echo date("d/m/y", time());
+            ?>
+            <span id="timer"> </span>
+
+        </label>
 
     </div> 
 
@@ -17,7 +25,7 @@
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <?php echo "JONATHAN";//$_SESSION['login_name']; ?> <i class="fad fa-cog"></i>
+                    <?php //echo $_SESSION['login_name']; ?> <i class="fad fa-cog"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 

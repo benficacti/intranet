@@ -3,10 +3,8 @@ session_start();
 if (!isset($_SESSION['login'])) {
     // header('Location: login');
 } else {
-
     
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -37,7 +35,6 @@ if (!isset($_SESSION['login'])) {
 
                     <div class="row corpo_menu_home">
                         <div class="col-md-12 card_size" >
-<?php echo $_GET['machine']; ?>
                             <!--<div class="texto_titulo_menu">
                                 <span class="custom_size_titulo_menu">
                                     MURAL
@@ -46,281 +43,201 @@ if (!isset($_SESSION['login'])) {
 
                             <div class="menu_home_item">
 
-                                <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <div class="imagem_icone" onclick="emailClick()">
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        EMAIL
+                                    </span>
                                 </div>
                             </div>
 
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        AVISOS
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
-                             <div class="menu_home_item">
+                            <div class="menu_home_item">
 
                                 <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
+                                <?php
+                                include './svg/archive.svg'
+                                ?>
                                 </div>
                                 <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
-                                </div>
-                            </div>
-                             <div class="menu_home_item">
-
-                                <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
-                                </div>
-                                <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
-                                </div>
-                            </div>
-                             <div class="menu_home_item">
-
-                                <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
-                                </div>
-                                <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
-                                </div>
-                            </div>
-                             <div class="menu_home_item">
-
-                                <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
-                                </div>
-                                <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
-                                </div>
-                            </div>
-                             <div class="menu_home_item">
-
-                                <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
-                                </div>
-                                <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
-                                </div>
-                            </div>
-                             <div class="menu_home_item">
-
-                                <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
-                                </div>
-                                <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
-                                </div>
-                            </div>
-                             <div class="menu_home_item">
-
-                                <div class="imagem_icone">
-                                    <?php
-                                    include 'svg/archive.svg'
-                                    ?>
-                                </div>
-                                <div class="text_icone">
-                                   <span class="text_menu_custom">
-                                    MURAL
-                                </span>
+                                    <span class="text_menu_custom">
+                                        MURAL
+                                    </span>
                                 </div>
                             </div>
                         </div>
-
-
 
                     </div>
                 </div>
@@ -331,9 +248,15 @@ if (!isset($_SESSION['login'])) {
         <script src="js/popper.min.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="fontawesome/js/all.js" type="text/css"/>
         <script src="js/bootstrap.bundle.min.js"></script>
+        
+        <!-- jQuery para rodar o Ajax -->
+        <script type="text/javascript" src="js/jquery.min.js"></script>
         <!-- Menu Toggle Script -->
         <script>
-
-        </script>
+        
+       function emailClick(){
+           location.href = 'index2';
+       }
+    </script>
     </body>
 </html>
