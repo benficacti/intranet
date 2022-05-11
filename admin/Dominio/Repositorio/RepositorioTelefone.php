@@ -6,6 +6,7 @@
  */
 
 namespace Rubens\Comercial\Dominio\Repositorio;
+
 use Rubens\Comercial\Model\telefone;
 
 /**
@@ -13,13 +14,14 @@ use Rubens\Comercial\Model\telefone;
  * @author Rubens
  */
 interface RepositorioTelefone {
+
     //put your code here
-    
-    public function todosTelefones():array;
-    public function salvarTelefone(telefone $telefone):bool;
-    public function createTelefone(telefone $telefone):bool;
-    public function readTelefone(telefone $telefone):array;
-    public function updateTelefone(telefone $telefone):bool;
-    public function deleteTelefone(telefone $telefone):bool;
-    
+
+    public function todosTelefones(): array;
+    public function listarNaoAssociadosTelefone(): array;
+    public function salvarTelefone(telefone $telefone): bool;
+    public function createTelefone(telefone $telefone): bool;
+    public function readTelefone(telefone $telefone): array;
+    public function updateTelefone(telefone $telefone): bool;
+    public function deleteTelefone(telefone $telefone): bool;
 }

@@ -15,9 +15,9 @@ namespace Rubens\Comercial\Model;
 class telefoneUsuario {
     //put your code here
     private ?int $id_telefone_usuario;
-    private int $id_telefone;
-    private int $id_status_visualizacao;
-    private int $id_nome_agenda;
+    private ?int $id_telefone;
+    private ?int $id_status_visualizacao;
+    private ?int $id_nome_agenda;
     
     public function __construct(?int $id_telefone_usuario, int $id_telefone, int $id_status_visualizacao, int $id_nome_agenda) {
         $this->id_telefone_usuario = $id_telefone_usuario;

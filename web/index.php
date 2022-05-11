@@ -3,7 +3,7 @@ session_start();
 if (!isset($_SESSION['login'])) {
     // header('Location: login');
 } else {
-    
+    $page;
 }
 ?>
 <!DOCTYPE html>
@@ -240,6 +240,7 @@ if (!isset($_SESSION['login'])) {
                         </div>
 
                     </div>
+                    
                 </div>
             </div>
             <!-- /#page-content-wrapper -->

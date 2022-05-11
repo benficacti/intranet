@@ -16,10 +16,10 @@ class nome_agenda {
     //put your code here
     
     private ?int $id_nome_agenda;
-    private string $nome_agenda;
-    private string $private_key_nome_agenda;
+    private ?string $nome_agenda;
+    private ?string $private_key_nome_agenda;
  
-    public function __construct(?int $id_nome_agenda, string $nome_agenda, string $private_key_nome_agenda) {
+    public function __construct(?int $id_nome_agenda, ?string $nome_agenda, ?string $private_key_nome_agenda) {
         $this->id_nome_agenda = $id_nome_agenda;
         $this->nome_agenda = $nome_agenda;
         $this->private_key_nome_agenda = $private_key_nome_agenda;
@@ -29,11 +29,11 @@ class nome_agenda {
         return $this->id_nome_agenda;
     }
 
-    public function getNome_agenda(): string {
+    public function getNome_agenda(): ?string {
         return $this->nome_agenda;
     }
 
-    public function getPrivate_key_nome_agenda(): string {
+    public function getPrivate_key_nome_agenda(): ?string {
         return $this->private_key_nome_agenda;
     }
 
@@ -41,13 +41,12 @@ class nome_agenda {
         $this->id_nome_agenda = $id_nome_agenda;
     }
 
-    public function setNome_agenda(string $nome_agenda): void {
+    public function setNome_agenda(?string $nome_agenda): void {
         $this->nome_agenda = $nome_agenda;
     }
 
-    public function setPrivate_key_nome_agenda(string $private_key_nome_agenda): void {
+    public function setPrivate_key_nome_agenda(?string $private_key_nome_agenda): void {
         $this->private_key_nome_agenda = $private_key_nome_agenda;
     }
-
 
 }

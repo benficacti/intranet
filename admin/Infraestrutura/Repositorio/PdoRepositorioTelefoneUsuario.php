@@ -42,18 +42,19 @@ class PdoRepositorioTelefoneUsuario implements RepositorioTelefoneUsuario {
     }
 
     public function readTelefoneUsuario(telefoneUsuario $telUsuario): array {
-        
+
+        $sqlTelefoneUsuario = 'SELECT * FROM TELEFONE_USUARIO WHERE ID_TELEFONE = "' . $telUsuario->getId_telefone() . '" AND ID_NOME_AGENDA ="' . $telUsuario->getId_nome_agenda() . '"';
+        $stmt = $this->conexao->query($sqlTelefoneUsuario);
+        $stmt->execute();
+
+        return $this->hidrataReadTelefoneUsuario($stmt);
     }
 
     public function salvarTelefoneUsuario(telefoneUsuario $telUsuario): bool {
         if ($telUsuario->getId_telefone_usuario() === null) {
-            $verifica_telefone = $this->verificaTelefone($telUsuario);
-            if ($verifica_telefone) {
-                return false;
-            } else {
-                return $this->createTelefoneUsuario($telUsuario);
-            }
+            return $this->createTelefoneUsuario($telUsuario);
         }
+        return $this->updateTelefoneUsuario($telUsuario);
     }
 
     public function todosTelefoneUsuario(): array {
@@ -68,7 +69,7 @@ class PdoRepositorioTelefoneUsuario implements RepositorioTelefoneUsuario {
         $stmt->bindValue(':ID_NOME_AGENDA', $telUsuario->getId_nome_agenda(), \PDO::PARAM_INT);
         $stmt->bindValue(':ID_TEL', $telUsuario->getId_telefone(), \PDO::PARAM_INT);
         $success = $stmt->execute();
-        if($success){
+        if ($success) {
             $this->conexao->lastInsertId();
         }
         return $success;
@@ -87,6 +88,23 @@ class PdoRepositorioTelefoneUsuario implements RepositorioTelefoneUsuario {
         } else {
             return false;
         }
+    }
+
+    public function hidrataReadTelefoneUsuario(\PDOStatement $stmt) {
+
+        $listagemReadTelefoneUsuario = $stmt->fetchAll(\PDO::FETCH_OBJ);
+
+        foreach ($listagemReadTelefoneUsuario as $dadosReadTelefone) {
+            $inf[] = array(
+                "RESULT" => "TRUE",
+                "ID_TELEFONE_USUARIO" => $dadosReadTelefone->ID_TELEFONE_USUARIO,
+                "ID_TELEFONE" => $dadosReadTelefone->ID_TELEFONE,
+                "ID_STATUS_VISUALIZACAO" => $dadosReadTelefone->ID_STATUS_VISUALIZACAO,
+                "ID_NOME_AGENDA" => $dadosReadTelefone->ID_NOME_AGENDA
+            );
+        }
+
+        return $inf;
     }
 
 }

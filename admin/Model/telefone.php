@@ -17,13 +17,13 @@ class telefone {
     
     private ?int $id_telefone;
     private string $num_telefone;
-    private int $id_operadora;
-    private int $id_status;
-    private int $id_garagem;
-    private int $id_tipo_telefone;
-    private string $private_key_telefone;
+    private ?int $id_operadora;
+    private ?int $id_status;
+    private ?int $id_garagem;
+    private ?int $id_tipo_telefone;
+    private ?string $private_key_telefone;
     
-    public function __construct(?int $id_telefone, string $num_telefone, int $id_operadora, int $id_status, int $id_garagem, int $id_tipo_telefone, string $private_key_telefone) {
+    public function __construct(?int $id_telefone, string $num_telefone, ?int $id_operadora, ?int $id_status, ?int $id_garagem, ?int $id_tipo_telefone, ?string $private_key_telefone) {
         $this->id_telefone = $id_telefone;
         $this->num_telefone = $num_telefone;
         $this->id_operadora = $id_operadora;
@@ -41,23 +41,23 @@ class telefone {
         return $this->num_telefone;
     }
 
-    public function getId_operadora(): int {
+    public function getId_operadora(): ?int {
         return $this->id_operadora;
     }
 
-    public function getId_status(): int {
+    public function getId_status(): ?int {
         return $this->id_status;
     }
 
-    public function getId_garagem(): int {
+    public function getId_garagem(): ?int {
         return $this->id_garagem;
     }
 
-    public function getId_tipo_telefone(): int {
+    public function getId_tipo_telefone(): ?int {
         return $this->id_tipo_telefone;
     }
 
-    public function getPrivate_key_telefone(): string {
+    public function getPrivate_key_telefone(): ?string {
         return $this->private_key_telefone;
     }
 
@@ -69,23 +69,23 @@ class telefone {
         $this->num_telefone = $num_telefone;
     }
 
-    public function setId_operadora(int $id_operadora): void {
+    public function setId_operadora(?int $id_operadora): void {
         $this->id_operadora = $id_operadora;
     }
 
-    public function setId_status(int $id_status): void {
+    public function setId_status(?int $id_status): void {
         $this->id_status = $id_status;
     }
 
-    public function setId_garagem(int $id_garagem): void {
+    public function setId_garagem(?int $id_garagem): void {
         $this->id_garagem = $id_garagem;
     }
 
-    public function setId_tipo_telefone(int $id_tipo_telefone): void {
+    public function setId_tipo_telefone(?int $id_tipo_telefone): void {
         $this->id_tipo_telefone = $id_tipo_telefone;
     }
 
-    public function setPrivate_key_telefone(string $private_key_telefone): void {
+    public function setPrivate_key_telefone(?string $private_key_telefone): void {
         $this->private_key_telefone = $private_key_telefone;
     }
 

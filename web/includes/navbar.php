@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="col-4">
-        <button class="btn btn-primary" id="menu-toggle">ESCONDER MENU</button>
+        <button class="btn btn-primary" id="menu-toggle" style="margin-left: 22px">ESCONDER MENU</button>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -8,12 +8,13 @@
 
     <div class="col-4 text-center">
         <label class="lbl-data-hora">
-
+            
+            <span id="timer">  </span>
             <?php
             date_default_timezone_set("America/Sao_Paulo");
             echo date("d/m/y", time());
             ?>
-            <span id="timer"> </span>
+            
 
         </label>
 

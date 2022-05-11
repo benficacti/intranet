@@ -30,23 +30,33 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
         $this->conexao = $conexao;
     }
 
-    public function createAgenda(agenda $agenda, telefone $telefone, nome_agenda $nome, email $email): bool {
+    public function createAgenda(agenda $agenda): bool {
 
-        $id_telefone = $this->insertReturnIdTelefone($telefone);
-        $id_nome_agenda = $this->insertReturnIdNome($nome);
-        $id_email = $this->insertReturnIdEmail($email);
-        $id_status_visualizacao = 1; //STATUS ATIVO
-        $private_key_agenda = 'hgGghg2356Fgsa/gy%1v*';
-
-        $sqlInsert = "INSERT INTO AGENDA (ID_TELEFONE, ID_NOME_AGENDA, ID_STATUS_VISUALIZACAO, ID_EMAIL, PRIVATE_KEY_AGENDA)"
-                . "VALUES (:ID_TELEFONE, :ID_NOME_AGENDA, :ID_STATUS_VISUALIZACAO, :ID_EMAIL, :PRIVATE_KEY_AGENDA);";
-        $stmt = $this->conexao->prepare($sqlInsert);
-        $stmt->bindValue(':ID_TELEFONE', $id_telefone, PDO::PARAM_INT);
-        $stmt->bindValue(':ID_NOME_AGENDA', $id_nome_agenda, PDO::PARAM_INT);
-        $stmt->bindValue(':ID_STATUS_VISUALIZACAO', $id_status_visualizacao, PDO::PARAM_INT);
-        $stmt->bindValue(':ID_EMAIL', $id_email, PDO::PARAM_INT);
-        $stmt->bindValue(':PRIVATE_KEY_AGENDA', $private_key_agenda, PDO::PARAM_STR);
+        $sqlInsertAgenda = 'INSERT INTO AGENDA(ID_TELEFONE_USUARIO, ID_NOME_AGENDA,'
+                . ' ID_STATUS_VISUALIZACAO, ID_EMAIL, PRIVATE_KEY_AGENDA) '
+                . 'VALUES (:tel, :nome, :status, :email, :hash)';
+        $stmt = $this->conexao->prepare($sqlInsertAgenda);
+        $stmt->bindValue(':tel', $agenda->getId_telefone_usuario(), PDO::PARAM_INT);
+        $stmt->bindValue(':nome', $agenda->getId_nome_agenda(), PDO::PARAM_INT);
+        $stmt->bindValue(':status', $agenda->getId_status_visualizacao(), PDO::PARAM_INT);
+        $stmt->bindValue(':email', $agenda->getId_email(), PDO::PARAM_INT);
+        $stmt->bindValue(':hash', $agenda->getPrivate_key_agenda(), PDO::PARAM_STR);
         $sucesso = $stmt->execute();
+
+        if ($sucesso) {
+            $agenda->setId_agenda($this->conexao->lastInsertId());
+            
+            //CRIAR HASH AUTOMATICAMENTE
+            $table = 'AGENDA';
+            $field_set = 'PRIVATE_KEY_AGENDA';
+            $field_eguals = 'ID_AGENDA';
+            $key = $this->conexao->lastInsertId();
+            $keyHash = password_hash($key, PASSWORD_BCRYPT);
+
+            $repositorioGeneretor = new PdoRepositorioGeneretor(Persistencia\CriadorConexao::criarConexao());
+            $repositorioGeneretor->generatorPrivateKeyHash($table, $field_set, $field_eguals, $key, $keyHash);
+        }
+
         return $sucesso;
     }
 
@@ -56,17 +66,27 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
 
     public function readAgenda(agenda $agenda): array {
         
+        $sqlReadAgenda = '
+            SELECT 
+                E.ENDERECO D_EMAIL,
+                T.NUM_TELEFONE N_TELEFONE
+                FROM AGENDA A 
+                RIGHT JOIN TELEFONE_USUARIO TU ON TU.ID_TELEFONE_USUARIO = A.ID_TELEFONE_USUARIO
+                INNER JOIN EMAIL E ON E.ID_EMAIL =  A.ID_EMAIL
+                INNER JOIN TELEFONE T ON T.ID_TELEFONE = TU.ID_TELEFONE AND TU.ID_STATUS_VISUALIZACAO  = 1
+                INNER JOIN NOME_AGENDA N ON N.ID_NOME_AGENDA = A.ID_NOME_AGENDA
+                WHERE N.NOME_AGENDA = Jose';
+        $stmt = $this->conexao->query($sqlReadAgenda);
+        
     }
 
-    public function salvarAgenda(
-            agenda $agenda,
-            telefone $telefone,
-            nome_agenda $nome, email $email): bool {
+    public function salvarAgenda(agenda $agenda): bool {
 
-
-        if ($agenda->getId_agenda() === null) {
-            return $this->createAgenda($agenda, $telefone, $nome, $email);
+        if ($agenda->getId_agenda() == null) {
+            return $this->createAgenda($agenda);
         }
+
+        return $this->updateAgenda($agenda);
     }
 
     public function todosAgenda(agenda $agenda): array {
@@ -75,49 +95,6 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
 
     public function updateAgenda(agenda $agenda): bool {
         
-    }
-
-    public function insertReturnIdTelefone(telefone $telefone) {
-        $sqlInsert = 'INSERT INTO TELEFONE (NUM_TELEFONE, ID_OPERADORA, ID_STATUS, ID_GARAGEM, ID_TIPO_TELEFONE, PRIVATE_KEY_TELEFONE) '
-                . 'VALUES (:NUM_TELEFONE, :ID_OPERADORA, :ID_STATUS, :ID_GARAGEM, :ID_TIPO_TELEFONE, :PRIVATE_KEY_TELEFONE);';
-        $stmt = $this->conexao->prepare($sqlInsert);
-
-        $stmt->bindValue(':NUM_TELEFONE', $telefone->getNum_telefone(), PDO::PARAM_STR);
-        $stmt->bindValue(":ID_OPERADORA", $telefone->getId_operadora(), PDO::PARAM_INT);
-        $stmt->bindValue(":ID_STATUS", $telefone->getId_status(), PDO::PARAM_INT);
-        $stmt->bindValue(":ID_GARAGEM", $telefone->getId_garagem(), PDO::PARAM_INT);
-        $stmt->bindValue(":ID_TIPO_TELEFONE", $telefone->getId_tipo_telefone(), PDO::PARAM_INT);
-        $stmt->bindValue(":PRIVATE_KEY_TELEFONE", $telefone->getPrivate_key_telefone(), PDO::PARAM_STR);
-        $sucesso = $stmt->execute();
-        if ($sucesso) {
-            return $this->conexao->lastInsertId();
-        }
-    }
-
-    public function insertReturnIdNome(nome_agenda $nome) {
-
-        $sqlInsert = 'INSERT INTO NOME_AGENDA (NOME_AGENDA, PRIVATE_KEY_NOME_AGENDA) '
-                . 'VALUES (:NOME_AGENDA, :PRIVATE_KEY_NOME_AGENDA);';
-        $stmt = $this->conexao->prepare($sqlInsert);
-
-        $stmt->bindValue(':NOME_AGENDA', $nome->getNome_agenda(), \PDO::PARAM_STR);
-        $stmt->bindValue(':PRIVATE_KEY_NOME_AGENDA', $nome->getPrivate_key_nome_agenda(), \PDO::PARAM_STR);
-        $sucesso = $stmt->execute();
-        if ($sucesso) {
-            return $this->conexao->lastInsertId();
-        }
-    }
-
-    public function insertReturnIdEmail($email) {
-
-        $sqlInsert = "INSERT INTO EMAIL (ENDERECO, PRIVATE_EMAIL) VALUES (:nome, :token);";
-        $stmt = $this->conexao->prepare($sqlInsert);
-        $stmt->bindValue(':nome', $email->getEndereco(), PDO::PARAM_STR);
-        $stmt->bindValue(':token', $email->getPrivate_email(), PDO::PARAM_STR);
-        $sucesso = $stmt->execute();
-        if ($sucesso) {
-            return $this->conexao->lastInsertId();
-        }
     }
 
 }

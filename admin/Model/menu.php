@@ -5,7 +5,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
  */
 
-namespace models;
+namespace Rubens\Comercial\Model;
 
 /**
  * Description of menu

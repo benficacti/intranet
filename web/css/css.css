@@ -426,11 +426,13 @@ body{
     margin-left: 0;
 }
 .backbenfacil{
-    background-image: url('../assets/img/benfacil_opacity.png');
+    background-image: url('../assets/img/bbtt.png');
     background-repeat: no-repeat;
     background-position: center;
     background-position-x: 50vw;
     background-size: auto;
+    opacity: 1.9px
+    
 }
 .custom_table{
     border:1px solid #3b3d84!important ;
@@ -573,7 +575,7 @@ body{
 
     #page-content-wrapper {
         min-width: 0;
-        width: 100%;
+        width: 110%;
     }
 
     #wrapper.toggled #sidebar-wrapper {
@@ -693,6 +695,12 @@ body{
 @media (max-width: 1366px) {
     .bar_top{
         background-color:#3b3d84;
+        color:white;
+        font-size:0.7em;
+    }
+    
+    .bar_top_sec{
+        background-color:#;
         color:white;
         font-size:0.7em;
     }

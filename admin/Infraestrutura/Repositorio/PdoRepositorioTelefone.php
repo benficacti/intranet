@@ -32,15 +32,31 @@ class PdoRepositorioTelefone implements RepositorioTelefone {
     }
 
     public function readTelefone(telefone $telefone): array {
-        
+        $num = $telefone->getNum_telefone();
+        $sqlTelefone = 'SELECT * FROM TELEFONE WHERE NUM_TELEFONE = "' . $num . '"';
+        $stmt = $this->conexao->query($sqlTelefone);
+        $stmt->execute();
+        $row = $stmt->rowCount();
+        if ($row < 1) {
+            $inf[] = array(
+                "RESULT" => "FALSE");
+            return $inf;
+        } else {
+            return $this->hidrataReadTelefone($stmt);
+        }
     }
 
     public function todosTelefones(): array {
         $sqlConsulta = 'SELECT 
-                        t.NUM_TELEFONE NUMERO,
-                        t.PRIVATE_KEY_TELEFONE HASH_TELEFONE,
-                        o.NOME OPERADORA
-                        FROM telefone T INNER JOIN operadora O ON  t.ID_OPERADORA = o.ID_OPERADORA';
+                        t.NUM_TELEFONE TELEFONE,
+                        g.DESCRICAO GARAGEM,
+                        tt.DESCRICAO TIPO_TELEFONE,
+                        o.NOME OPERADORA,
+                        t.PRIVATE_KEY_TELEFONE HASH_TELEFONE
+                        FROM telefone t 
+                        INNER JOIN operadora o ON o.ID_OPERADORA = t.ID_OPERADORA
+                        INNER JOIN garagem g ON g.ID_GARAGEM = t.ID_GARAGEM
+                        INNER JOIN tipo_telefone tt ON tt.ID_TIPO_TELEFONE = t.ID_TIPO_TELEFONE';
         $stmt = $this->conexao->query($sqlConsulta);
         return $this->hidratarListaTelefone($stmt);
     }
@@ -103,14 +119,53 @@ class PdoRepositorioTelefone implements RepositorioTelefone {
 
     public function hidratarListaTelefone(\PDOStatement $stmt) {
         $listaDadosTelefone = $stmt->fetchAll(\PDO::FETCH_OBJ);
-        
-        foreach ($listaDadosTelefone as $dadosTelefone){
+
+        foreach ($listaDadosTelefone as $dadosTelefone) {
             $inf[] = array(
-                "NUMERO" => $dadosTelefone->NUMERO,
-                "HASH_TELEFONE" => $dadosTelefone->HASH_TELEFONE
-                );
+                "RESULT" => "TRUE",
+                "TELEFONE" => $dadosTelefone->TELEFONE,
+                "GARAGEM" => $dadosTelefone->GARAGEM,
+                "TIPO_TELEFONE" => $dadosTelefone->TIPO_TELEFONE,
+                "OPERADORA" => $dadosTelefone->OPERADORA,
+                "HASH" => $dadosTelefone->HASH_TELEFONE
+            );
         }
         return $inf;
+    }
+
+    public function hidrataReadTelefone(\PDOStatement $stmt): array {
+        $listaReadTelefone = $stmt->fetchAll(\PDO::FETCH_OBJ);
+
+        foreach ($listaReadTelefone as $dadosReadTelefone) {
+            $inf[] = array(
+                "RESULT" => "TRUE",
+                "ID_TELEFONE" => $dadosReadTelefone->ID_TELEFONE,
+                "NUMERO_TEL" => $dadosReadTelefone->NUM_TELEFONE,
+                "ID_OPERADORA" => $dadosReadTelefone->ID_OPERADORA,
+                "ID_TIPO_TELEFONE" => $dadosReadTelefone->ID_TIPO_TELEFONE,
+                "PRIVATE_KEY_TELEFONE" => $dadosReadTelefone->PRIVATE_KEY_TELEFONE
+            );
+        }
+        return $inf;
+    }
+
+    public function listarNaoAssociadosTelefone(): array {
+
+        $sqlConsulta = 'SELECT 
+                        t.NUM_TELEFONE TELEFONE,
+                        g.DESCRICAO GARAGEM,
+                        tt.DESCRICAO TIPO_TELEFONE,
+                        o.NOME OPERADORA,
+                        t.PRIVATE_KEY_TELEFONE HASH_TELEFONE,
+                        tu.ID_STATUS_VISUALIZACAO
+                        FROM telefone t 
+                        INNER JOIN operadora o ON o.ID_OPERADORA = t.ID_OPERADORA
+                        INNER JOIN garagem g ON g.ID_GARAGEM = t.ID_GARAGEM
+                        INNER JOIN tipo_telefone tt ON tt.ID_TIPO_TELEFONE = t.ID_TIPO_TELEFONE
+                        INNER JOIN telefone_usuario tu ON tu.ID_TELEFONE = t.ID_TELEFONE
+                        WHERE tu.ID_STATUS_VISUALIZACAO != 1';
+        $stmt = $this->conexao->query($sqlConsulta);
+        return $this->hidratarListaTelefone($stmt);
     }
 
 }
