@@ -54,8 +54,9 @@ class PdoRepositorioNomeAgenda implements RepositorioNomeAgenda {
     }
 
     public function readNomeAgenda(nome_agenda $nome_agenda): array {
-        $sqlNomeAgenda = 'SELECT * FROM NOME_AGENDA WHERE NOME_AGENDA = "' . $nome_agenda->getNome_agenda() . '" ';
-        $stmt = $this->conexao->query($sqlNomeAgenda);
+        $sqlNomeAgenda = 'SELECT * FROM NOME_AGENDA WHERE NOME_AGENDA LIKE :NomeAgenda;';
+        $stmt = $this->conexao->prepare($sqlNomeAgenda);
+        $stmt->bindValue(':NomeAgenda',"%".$nome_agenda->getNome_agenda()."%", PDO:: PARAM_STR);
         $stmt->execute();
         $row = $stmt->rowCount();
         if ($row < 1) {
@@ -103,7 +104,8 @@ class PdoRepositorioNomeAgenda implements RepositorioNomeAgenda {
             $inf [] = array(
                 "RESULT" => "TRUE",
                 "ID_NOME_AGENDA" => $dados->ID_NOME_AGENDA,
-                "NOME_AGENDA" => $dados->NOME_AGENDA
+                "NOME_AGENDA" => $dados->NOME_AGENDA,
+                "HASH_PRIVATE_NOME" => $dados->PRIVATE_KEY_NOME_AGENDA
             );
         }
         return $inf;

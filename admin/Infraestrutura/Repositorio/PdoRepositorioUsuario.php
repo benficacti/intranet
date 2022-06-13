@@ -31,7 +31,7 @@ class PdoRepositorioUsuario  implements RepositorioUsuario{
         $stmt->bindValue(':nome_usu', $usuario->getNome_usuario(), \PDO::PARAM_STR);
         $stmt->bindValue(':id_email', $usuario->getId_email_usuario(), \PDO::PARAM_INT);
         $stmt->bindValue(':id_setor', $usuario->getId_setor_usuario(), \PDO::PARAM_INT);
-        $stmt->bindValue(':priv_key_usu', $usuario->getPrivate_key_usuario(), \PDO::PARAM_INT);
+        $stmt->bindValue(':priv_key_usu', $usuario->getPrivate_key_usuario(), \PDO::PARAM_STR);
         $success = $stmt->execute();
         if($success){
             

@@ -20,10 +20,11 @@ interface RepositorioAgenda {
 
     //put your code here
 
-    public function todosAgenda(agenda $agenda): array;
+    public function todosAgenda(): array;
     public function createAgenda(agenda $agenda): bool;
     public function deleteAgenda(agenda $agenda): bool;
     public function salvarAgenda(agenda $agenda): bool;
     public function readAgenda(agenda $agenda): array;
+    public function readSearchAgenda($agenda): array;
     public function updateAgenda(agenda $agenda): bool;
 }

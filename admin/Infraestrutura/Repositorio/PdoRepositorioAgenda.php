@@ -33,19 +33,20 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
     public function createAgenda(agenda $agenda): bool {
 
         $sqlInsertAgenda = 'INSERT INTO AGENDA(ID_TELEFONE_USUARIO, ID_NOME_AGENDA,'
-                . ' ID_STATUS_VISUALIZACAO, ID_EMAIL, PRIVATE_KEY_AGENDA) '
-                . 'VALUES (:tel, :nome, :status, :email, :hash)';
+                . ' ID_STATUS_VISUALIZACAO, ID_EMAIL, ID_SETOR, PRIVATE_KEY_AGENDA) '
+                . 'VALUES (:tel, :nome, :status, :email, :setor, :hash)';
         $stmt = $this->conexao->prepare($sqlInsertAgenda);
         $stmt->bindValue(':tel', $agenda->getId_telefone_usuario(), PDO::PARAM_INT);
         $stmt->bindValue(':nome', $agenda->getId_nome_agenda(), PDO::PARAM_INT);
         $stmt->bindValue(':status', $agenda->getId_status_visualizacao(), PDO::PARAM_INT);
         $stmt->bindValue(':email', $agenda->getId_email(), PDO::PARAM_INT);
+        $stmt->bindValue(':setor', $agenda->getId_setor(), PDO::PARAM_INT);
         $stmt->bindValue(':hash', $agenda->getPrivate_key_agenda(), PDO::PARAM_STR);
         $sucesso = $stmt->execute();
 
         if ($sucesso) {
             $agenda->setId_agenda($this->conexao->lastInsertId());
-            
+
             //CRIAR HASH AUTOMATICAMENTE
             $table = 'AGENDA';
             $field_set = 'PRIVATE_KEY_AGENDA';
@@ -65,36 +66,141 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
     }
 
     public function readAgenda(agenda $agenda): array {
-        
+
         $sqlReadAgenda = '
             SELECT 
                 E.ENDERECO D_EMAIL,
-                T.NUM_TELEFONE N_TELEFONE
+                T.NUM_TELEFONE N_TELEFONE,
+                S.DESC_SETOR D_SETOR
                 FROM AGENDA A 
                 RIGHT JOIN TELEFONE_USUARIO TU ON TU.ID_TELEFONE_USUARIO = A.ID_TELEFONE_USUARIO
                 INNER JOIN EMAIL E ON E.ID_EMAIL =  A.ID_EMAIL
                 INNER JOIN TELEFONE T ON T.ID_TELEFONE = TU.ID_TELEFONE AND TU.ID_STATUS_VISUALIZACAO  = 1
                 INNER JOIN NOME_AGENDA N ON N.ID_NOME_AGENDA = A.ID_NOME_AGENDA
-                WHERE N.NOME_AGENDA = Jose';
-        $stmt = $this->conexao->query($sqlReadAgenda);
-        
+                INNER JOIN SETOR S ON S.ID_SETOR = A.ID_SETOR
+                WHERE N.ID_NOME_AGENDA =:idNome ';
+        $stmt = $this->conexao->prepare($sqlReadAgenda);
+        $stmt->bindValue(':idNome', $agenda->getId_nome_agenda(), PDO::PARAM_INT);
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            return $this->histradaReadAgenda($stmt);
+        } else {
+            $inf[] = array("RESULT" => "FALSE");
+            return $inf;
+        }
     }
 
     public function salvarAgenda(agenda $agenda): bool {
 
         if ($agenda->getId_agenda() == null) {
+
+            $verifica = $this->verificarAgenda($agenda);
+            if ($verifica) {
+                return $this->updateAgenda($agenda);
+            }
+
             return $this->createAgenda($agenda);
         }
-
-        return $this->updateAgenda($agenda);
     }
 
-    public function todosAgenda(agenda $agenda): array {
-        
+    public function todosAgenda(): array {
+        $sqlAgenda = 'SELECT 
+                        N.NOME_AGENDA NOME_FUNC,
+                        E.ENDERECO END_EMAIL,
+                        T.NUM_TELEFONE NUM_TELEFONE,
+                        s.DESC_SETOR D_SETOR
+                        FROM AGENDA A 
+                        INNER JOIN NOME_AGENDA N ON A.ID_NOME_AGENDA = N.ID_NOME_AGENDA
+                        INNER JOIN EMAIL E ON E.ID_EMAIL = A.ID_EMAIL
+                        INNER JOIN TELEFONE_USUARIO TU ON TU.ID_TELEFONE_USUARIO =  A.ID_TELEFONE_USUARIO
+                        INNER JOIN TELEFONE T ON T.ID_TELEFONE =  TU.ID_TELEFONE
+                        INNER JOIN SETOR S ON S.ID_SETOR = A.ID_SETOR
+                        WHERE A.ID_STATUS_VISUALIZACAO = 1';
+
+        $stmt = $this->conexao->query($sqlAgenda);
+        $stmt->execute();
+        return $this->histradaTodosAgenda($stmt);
     }
 
     public function updateAgenda(agenda $agenda): bool {
-        
+        $agenda->getId_agenda();
+        $agenda->getId_email();
+        $agenda->getId_nome_agenda();
+        $agenda->getId_telefone_usuario();
+        $agenda->getPrivate_key_agenda();
+        $sqlAgenda = "UPDATE AGENDA SET ID_STATUS_VISUALIZACAO = '" . $agenda->getId_status_visualizacao() . "' WHERE ID_NOME_AGENDA = '" . $agenda->getId_nome_agenda() . "';";
+        $stmt = $this->conexao->prepare($sqlAgenda);
+        $sucesso = $stmt->execute();
+
+        return $sucesso;
+    }
+
+    public function histradaReadAgenda(\PDOStatement $stmt): array {
+        $listaReadAgenda = $stmt->fetchAll(\PDO::FETCH_OBJ);
+
+        foreach ($listaReadAgenda as $dados) {
+            $inf [] = array(
+                "RESULT" => "TRUE",
+                "N_TELEFONE" => $dados->N_TELEFONE,
+                "D_EMAIL" => $dados->D_EMAIL,
+                "D_SETOR" => $dados->D_SETOR
+            );
+        }
+        return $inf;
+    }
+
+    public function verificarAgenda(agenda $agenda) {
+
+
+        $sqlQuery = 'SELECT A.ID_AGENDA AGEND FROM AGENDA A WHERE A.ID_TELEFONE_USUARIO = :id_tel_usuario and A.ID_NOME_AGENDA = :id_nome_agenda;';
+        $stmt = $this->conexao->prepare($sqlQuery);
+        $stmt->bindValue(':id_tel_usuario', $agenda->getId_telefone_usuario(), \PDO::PARAM_INT);
+        $stmt->bindValue(':id_nome_agenda', $agenda->getId_nome_agenda(), \PDO::PARAM_INT);
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function histradaTodosAgenda(\PDOStatement $stmt) {
+
+        $listarTodosAgenda = $stmt->fetchAll(\PDO::FETCH_OBJ);
+
+        foreach ($listarTodosAgenda as $dadosTodosAgenda) {
+            $inf[] = array(
+                "RESULT" => "TRUE",
+                "NOME_FUNC" => $dadosTodosAgenda->NOME_FUNC,
+                "ENDER_EMAIL" => $dadosTodosAgenda->END_EMAIL,
+                "NUM_TELEFONE" => $dadosTodosAgenda->NUM_TELEFONE,
+                "D_SETOR" => $dadosTodosAgenda->D_SETOR
+            );
+        }
+        return $inf;
+    }
+
+    public function readSearchAgenda($agenda): array {
+
+        $sqlAgenda = 'SELECT 
+                        N.NOME_AGENDA NOME_FUNC,
+                        E.ENDERECO END_EMAIL,
+                        T.NUM_TELEFONE NUM_TELEFONE,
+                        s.DESC_SETOR D_SETOR
+                        FROM AGENDA A 
+                        INNER JOIN NOME_AGENDA N ON A.ID_NOME_AGENDA = N.ID_NOME_AGENDA
+                        INNER JOIN EMAIL E ON E.ID_EMAIL = A.ID_EMAIL
+                        INNER JOIN TELEFONE_USUARIO TU ON TU.ID_TELEFONE_USUARIO =  A.ID_TELEFONE_USUARIO
+                        INNER JOIN TELEFONE T ON T.ID_TELEFONE =  TU.ID_TELEFONE
+                        INNER JOIN SETOR S ON S.ID_SETOR = A.ID_SETOR
+                        WHERE N.NOME_AGENDA LIKE "%'.$agenda.'%" '
+                . 'OR E.ENDERECO LIKE "%'.$agenda.'%" '
+                . 'OR T.NUM_TELEFONE LIKE "%'.$agenda.'%" '
+                . 'OR S.DESC_SETOR LIKE "%'.$agenda.'%" AND A.ID_STATUS_VISUALIZACAO = 1';
+
+        $stmt = $this->conexao->query($sqlAgenda);
+        $stmt->execute();
+        return $this->histradaTodosAgenda($stmt);
     }
 
 }

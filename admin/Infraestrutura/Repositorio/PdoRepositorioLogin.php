@@ -76,4 +76,53 @@ class PdoRepositorioLogin implements RepositorioLogin {
         return $success;
     }
 
+    public function readLogin(login $login): array {
+        $password = $login->getSenha_login();
+        $sqlReadUsuario = 'SELECT 
+                            S.nome_usuario N_USUARIO,
+                            ST.DESC_SETOR D_SETOR,
+                            L.SENHA D_SENHA,
+                            L.ID_LOGIN HASH_ID_LOGIN,
+                            L.PRIVATE_KEY_LOGIN HASH_LOGIN,
+                            L.ID_PERFIL_LOGIN PERFIL
+                            FROM USUARIO S 
+                            INNER JOIN LOGIN L ON L.ID_USUARIO_LOGIN = S.id_usuario
+                            INNER JOIN SETOR ST ON ST.ID_SETOR = S.id_setor_usuario
+                            WHERE L.NOME =:nUser';
+        $stmt = $this->conexao->prepare($sqlReadUsuario);
+        $stmt->bindValue(':nUser', $login->getNome_login(), PDO::PARAM_STR);
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            return $this->hidrataUsuario($stmt, $password);
+        } else {
+            $inf[] = array('RESULT' => 'FALSE');
+            return $inf;
+        }
+    }
+
+    public function todosLogin(): array {
+        
+    }
+
+    public function hidrataUsuario(\PDOStatement $stmt, $password): array {
+        session_start();
+        $listarUsuario = $stmt->fetchAll(PDO::FETCH_OBJ);
+        foreach ($listarUsuario as $dadosUsuario) {
+            if ($dadosUsuario->D_SENHA == $password) {
+                $_SESSION['id_login'] = $dadosUsuario->HASH_ID_LOGIN;
+                $_SESSION['id_perfil'] = $dadosUsuario->PERFIL;
+                $inf[] = array(
+                    "RESULT" => 'TRUE',
+                    "N_USUARIO" => $dadosUsuario->N_USUARIO,
+                    "D_SETOR" => $dadosUsuario->D_SETOR,
+                    "PERFIL" => $dadosUsuario->PERFIL,
+                    "D_SENHA" => $dadosUsuario->D_SENHA,
+                    "HASH_ID_LOGIN" => $dadosUsuario->HASH_ID_LOGIN,
+                    "HASH_LOGIN" => $dadosUsuario->HASH_LOGIN
+                );
+            }
+        }
+        return $inf;
+    }
+
 }

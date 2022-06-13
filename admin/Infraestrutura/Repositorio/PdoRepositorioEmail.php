@@ -105,16 +105,17 @@ class PdoRepositorioEmail implements RepositorioEmail {
                 "RESULT" => "TRUE",
                 "ID" => $dadosEmail->ID_EMAIL,
                 "ENDERECO" => $dadosEmail->ENDERECO,
-                "PRIVATE_EMAIL" => $dadosEmail->PRIVATE_KEY_EMAIL
+                "HASH_PRIVATE_EMAIL" => $dadosEmail->PRIVATE_KEY_EMAIL
             );
         }
         return $inf;
     }
 
     public function readEmailSearch(email $email): array {
-        $desc = $email->getEndereco();
-        $sqlConsultaEmails = "SELECT * FROM email  WHERE ENDERECO LIKE '%".$desc."%'";
+        
+        $sqlConsultaEmails = "SELECT * FROM EMAIL  WHERE ENDERECO LIKE :descEmail";
         $stmt = $this->conexao->prepare($sqlConsultaEmails);
+        $stmt->bindValue(':descEmail', "%".$email->getEndereco()."%", \PDO::PARAM_STR);
         $stmt->execute();
         
         return $this->hidratarListaEmail($stmt);

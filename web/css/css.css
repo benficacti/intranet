@@ -1,8 +1,8 @@
 /*gilroy exta bold*/
 @font-face {
     font-family: "SergoeUI";
-     src: url("../fonts/segoe_ui.otf") format("opentype");
-    
+    src: url("../fonts/segoe_ui.otf") format("opentype");
+
 }
 
 /*  ESTILOS GERAIS*/
@@ -98,9 +98,9 @@ body{
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-left:2vw;
-     float:left !important;
-     text-align: center;
-     width:100vw;
+    float:left !important;
+    text-align: center;
+    width:100vw;
 }
 .card_size{
     min-width: 10vh!important;
@@ -109,7 +109,7 @@ body{
     width:100vw;
     margin-left:0px!important;
     padding:0px!important;
-   
+
 }
 .menu_home_item{
     width:19.6vw;
@@ -119,19 +119,19 @@ body{
 }
 .imagem_icone{
     width:100%;
-     height:17vh;
+    height:17vh;
     float:left !important;
 }
 .text_icone{
-     width:100%;
-     height:5vh;
+    width:100%;
+    height:5vh;
     float:left !important;
-     text-align: center;
+    text-align: center;
 }
 
 .text_menu_custom{
-      font-family: "SergoeUI";
-    font-size: 2vw;
+    font-family: "SergoeUI";
+    font-size: 20px;
     background: -webkit-linear-gradient(#803DD1, #6200FF);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -144,8 +144,9 @@ body{
     fill: url(#gradient) #447799;
 }
 #item_vector{
-    
+
 }
+
 
 
 
@@ -188,17 +189,17 @@ body{
 }
 .container-login{
     width:35vw;
-    height:100vh;   
+    height:100vh;
     margin:0 auto;
 }
 .login{
     width:35vw;
-    height:60vh;   
+    height:60vh;
     margin-top:20vh;
 }
 .header-login{
     width:35vw;
-    height:10vh;   
+    height:10vh;
     float:left;
 }
 .title-header-login{
@@ -211,18 +212,18 @@ body{
 }
 .article-login{
     width:35vw;
-    height:50vh;   
+    height:50vh;
     float:left;
 }
 .line-login{
     width:35vw;
-    height:12vh;   
+    height:12vh;
     float:left;
     margin-top:2vh;
 }
 .title-login{
     width:35vw;
-    height:5vh;   
+    height:5vh;
     float:left;
     letter-spacing: 1.2px;
     font-size:1.2em;
@@ -234,7 +235,7 @@ body{
 
 .rod-rodape{
     width:40vw;
-    height:12vh;   
+    height:12vh;
     float:left;
     margin-top:-10vh;
     margin-left:-10vw;
@@ -244,13 +245,13 @@ body{
     width:20vw;
     padding-top:4vh;
     text-align: center;
-    height:6vh;   
+    height:6vh;
     margin:0 auto;
 }
 
 .fa-rodape{
     width:100vw;
-    height:6vh;  
+    height:6vh;
     border:0px;
     background-color:#A9A9A9;
     color:#333333;
@@ -269,7 +270,7 @@ body{
 
 .title-senha{
     width:17vw;
-    height:5vh;   
+    height:5vh;
     float:left;
     letter-spacing: 1.2px;
     font-size:1.2em;
@@ -277,7 +278,7 @@ body{
 }
 .title-senha-right{
     width:17vw;
-    height:5vh;   
+    height:5vh;
     float:right;
     text-align:right;
     font-family: 'SergoeUI';
@@ -292,14 +293,14 @@ body{
     opacity: 0.9;
 }
 
-.pesquisar_painel{  
+.pesquisar_painel{
     border-radius:10px;
     -moz-border-radius:10px;
     -webkit-border-radius:10px;
-    box-shadow: 1px 1px 2px #333333;    
+    box-shadow: 1px 1px 2px #333333;
     -moz-box-shadow: 1px 1px 2px #333333;
     -webkit-box-shadow: 1px 1px 2px #333333;
-    background: #fff; 
+    background: #fff;
     border:1px solid #000000;
     width:200px;
     text-align: center;
@@ -310,24 +311,24 @@ body{
 
 .input-group-login{
     width:35vw;
-    height:6vh;   
+    height:6vh;
     float:left;
     border:1px solid  #ccc;
     border-radius:10px;
 }
 .input-group-login-active{
     transition-duration: 1s;
-    transform-style: linear;    
+    transform-style: linear;
     border:1px solid #555;
 }
 .input-group-login-error{
     transition-duration: 1s;
-    transform-style: linear;    
+    transform-style: linear;
     border:1px solid red;
 }
 .input-login{
     width:33vw;
-    height:5vh;   
+    height:5vh;
     float:left;
     margin-left:1vh;
     padding-left: 10px;
@@ -343,12 +344,12 @@ body{
 .btn-login{
     width:20vw;
 
-    height:6vh;   
+    height:6vh;
     margin:0 auto;
 }
 .bt-login{
     width:20vw;
-    height:6vh;  
+    height:6vh;
     border:0px;
     background-color:#0399D4;
     color:white;
@@ -360,20 +361,20 @@ body{
     cursor: pointer;
     background-color:#555;
     transition-duration: 0.5s;
-    transform-style: linear;    
+    transform-style: linear;
 }
 #wrapper {
     overflow-x: hidden;
 }
 
 .back_side{
-    background-color:#3b3d84!important;
+    background-color:#0056b3!important;
     color:white;
     font-size:1.1em;
 }
 
 .back_side_item{
-    background-color:#3b3d84!important;
+    background-color:#0069d9!important;
     color:white;
     font-size:1.1em;
 }
@@ -383,7 +384,8 @@ body{
     font-size: 1em!important;
 }
 .center-time{
-    border: 1px solid black; margin:0 auto;
+    border: 1px solid black;
+    margin:0 auto;
     margin-top: 2em;
 }
 .img-logo{
@@ -432,7 +434,7 @@ body{
     background-position-x: 50vw;
     background-size: auto;
     opacity: 1.9px
-    
+
 }
 .custom_table{
     border:1px solid #3b3d84!important ;
@@ -445,15 +447,26 @@ body{
 .btn_view{
     color:  #3b3d84;
     font-weight: 800;
-    text-decoration:none; 
+    text-decoration:none;
 }
 .btn_view:link{
-    text-decoration:none; 
+    text-decoration:none;
 }
 .bar_top{
-    background-color:#3b3d84;
+    background-color:#CCC;
     color:white;
     margin-top: 0px !important;
+}
+.bar_top_sec{
+    background-color:#CCC;
+    color:black;
+    font-size:0.7em;
+}
+.bar_top_recrutamento{
+    background-color:#0000ff;
+    color:white;
+    margin-top: 0px !important;
+    font-weight: normal;
 }
 .row_custom_table{
     font-size: 1em;
@@ -478,6 +491,9 @@ body{
 .text-title-table{
     color: #3b3d84;
     font-size:1.2em;
+}
+.class_title{
+    font-weight: bold !important
 }
 .text-consulta-table{
     color: #fff;
@@ -566,8 +582,14 @@ body{
     margin-bottom:30px;
 }
 .center-div{
-    margin-top:30px;    
+    margin-top:30px;
 }
+
+.class_border_input{
+    border-radius: 6px
+}
+
+
 @media (min-width: 768px) {
     #sidebar-wrapper {
         margin-left: 0;
@@ -585,27 +607,28 @@ body{
         color:#3b3d84;
         font-size:1em;
         font-weight: 700;
+        
     }
     .btn_view{
         color:  #3b3d84;
         font-weight: 800;
-        text-decoration:none; 
+        text-decoration:none;
     }
 
 }
 
 @media (max-width: 420px) {
     .bar_top{
-        background-color:#3b3d84;
+        background-color:#CCC;
         color:white;
         font-size:0.7em;
     }
     .row_custom_table{
         font-size: 0.7em;
-    } 
+    }
     #sidebar-wrapper .sidebar-heading {
         padding: 0.875rem 1.25rem;
-        font-size:0.7em; 
+        font-size:0.7em;
     }
     .back_side{
         background-color:#3b3d84!important;
@@ -613,7 +636,7 @@ body{
         font-size:0.7em;
     }
     .back_side_item{
-        background-color:#3b3d84!important;
+        background-color:#0056b3!important;
         color:white;
         font-size:0.7em;
     }
@@ -629,16 +652,16 @@ body{
 
 @media (max-width: 768px) {
     .bar_top{
-        background-color:#3b3d84;
+        background-color:#CCC;
         color:white;
         font-size:0.7em;
     }
     .row_custom_table{
         font-size: 0.7em;
-    } 
+    }
     #sidebar-wrapper .sidebar-heading {
         padding: 0.875rem 1.25rem;
-        font-size:0.7em; 
+        font-size:0.7em;
     }
     .back_side{
         background-color:#3b3d84!important;
@@ -646,7 +669,7 @@ body{
         font-size:0.7em;
     }
     .back_side_item{
-        background-color:#3b3d84!important;
+        background-color:#0056b3!important;
         color:white;
         font-size:0.7em;
     }
@@ -662,24 +685,24 @@ body{
 
 @media (max-width: 1024px) {
     .bar_top{
-        background-color:#3b3d84;
+        background-color:#CCC;
         color:white;
         font-size:0.7em;
     }
     .row_custom_table{
         font-size: 0.7em;
-    } 
+    }
     #sidebar-wrapper .sidebar-heading {
         padding: 0.875rem 1.25rem;
-        font-size:1em; 
+        font-size:1em;
     }
     .back_side{
-        background-color:#3b3d84!important;
+        background-color:#0069d9!important;
         color:white;
         font-size:1em;
     }
     .back_side_item{
-        background-color:#3b3d84!important;
+        background-color:#0056b3!important;
         color:white;
         font-size:1em;
     }
@@ -694,30 +717,31 @@ body{
 }
 @media (max-width: 1366px) {
     .bar_top{
-        background-color:#3b3d84;
+        background-color:#CCC;
         color:white;
         font-size:0.7em;
     }
-    
+
     .bar_top_sec{
-        background-color:#;
-        color:white;
+        background-color:#CCC;
+        color:black;
         font-size:0.7em;
     }
     .row_custom_table{
         font-size: 0.7em;
-    } 
+    }
     #sidebar-wrapper .sidebar-heading {
         padding: 0.875rem 1.25rem;
-        font-size:1em; 
+        font-size:1em;
     }
     .back_side{
-        background-color:#3b3d84!important;
+        background-color:#0056b3!important;
         color:white;
         font-size:0.9em;
     }
+
     .back_side_item{
-        background-color:#3b3d84!important;
+        background-color:#0069d9!important;
         color:white;
         font-size:0.9em;
     }

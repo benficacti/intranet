@@ -9,6 +9,8 @@
         <meta charset="UTF-8">
         <meta charset="iso-8859-1"/>
         <title></title>
+
+
     </head>
     <body>
         <div class="d-flex backbenfacil" id="wrapper" >
@@ -30,13 +32,13 @@
 
                     <div class="painel_listagem_email">
                         <div class="col-md-11 text-center" style="margin:0 auto; height:30px; margin-top: 2vh;">
-                            <label class="title_cartoes_pendentes text-title-table">TELEFONES ÚTEIS</label>
+                            <label class="title_cartoes_pendentes text-title-table class_title">TELEFONES</label>
                         </div>
                         <div class="col-md-11" style="margin:0 auto;">
-                            <div class="col-md-12 text-left" style=" background-color:#3b3d84;
+                            <div class="col-md-12 text-left" style=" background-color:#0069D9;
                                  color:white; height:40px; border-top-right-radius: 8px; border-top-left-radius: 8px">
                                 <label class="title_cartoes_pendentes text-consulta-table">LISTAR TELEFONES: </label>
-                                <input type="text" name="cpf_cadastro" class="text-input-table" id="doc" placeholder="descricao@email.com.br" onkeyup="loadingData()">
+                                <input type="text" name="telefone_name" class="text-input-table class_border_input" id="id_telefone_cadastro" placeholder="pesquisar" onkeyup="loadingData()">
                             </div>
                             <table class="table table-striped custom_table" id="info">
 
@@ -136,26 +138,34 @@
                     classes: 'table',
                     columns: [{
                             field: 'TEL',
-                            title: '<i class="fad fa-user"></i> TELEFONE',
+                            title: '<i class="fad fa-phone-office"></i> TELEFONE',
                             sortable: true,
                             search: true
 
                         },
                         {
                             field: 'GAR',
-                            title: '<i class="fad fa-user"></i> GARAGEM',
+                            title: '<i class="fad fa-garage"></i> GARAGEM',
                             sortable: true,
-                            visible: true
+                            search: true
                         },
                         {
                             field: 'TIPO_TELEFONE',
-                            title: '<i class="fad fa-user"></i> TIPO_TELEFONE',
-                            sortable: true
+                            title: '<i class="fad fa-bars"></i> TIPO TELEFONE',
+                            sortable: true,
+                            search: true
                         },
                         {
                             field: 'OPERADORA',
-                            title: '<i class="fad fa-user"></i> OPERADORA',
-                            sortable: true
+                            title: '<i class="fas fa-list-alt"></i> OPERADORA',
+                            sortable: true,
+                            search: true
+                        },
+                        {
+                            field: 'SETOR',
+                            title: '<i class="fad fa-list"></i> SETOR',
+                            sortable: true,
+                            search: true
                         }
 
 
@@ -163,32 +173,43 @@
                     data: dado
                 });
 
-                $("thead").addClass("bar_top_sec");
+                //$("thead").addClass("bar_top_sec");
+                $("tr").addClass("bar_top_sec");
                 //$("#info").removeClass("table-bordered")
             }
 
 
             function loadingData() {
                 var dado = [];
+                var num_tel = document.getElementById('id_telefone_cadastro').value;
                 $.ajax({
                     url: "../api.php",
                     method: "post",
                     async: false,
                     data: {
-                        request: "listar_telefone"
+                        request: "listar_telefone",
+                        num_tel: num_tel
                     },
                     success: function (data) {
                         console.log(data)
+                        var setor = '';
                         $.each(JSON.parse(data), function (key, val) {
-
                             if (val.RESULT == "TRUE") {
+                                if (val.D_SETOR == null) {
+                                    setor = ''
+                                } else {
+                                    setor = val.D_SETOR;
+                                }
                                 dado.push({
-                                    TEL: '<label class="class_nome"><i class="fad fa-user"></i></label>' + val.TELEFONE,
-                                    GAR: '<label class="class_nome"><i class="fad fa-user"></i></label>' + val.GARAGEM,
-                                    TIPO_TELEFONE: '<label class="class_nome"><i class="fad fa-user"></i></label>' + val.TIPO_TELEFONE,
-                                    OPERADORA: '<label class="class_nome"><i class="fad fa-user"></i></label>' + val.OPERADORA
+                                    TEL: '<label class="class_nome"><i class="fad fa-phone-office"></i></label> ' + val.TELEFONE,
+                                    GAR: '<label class="class_nome"><i class="fad fa-garage"></i></label> ' + val.GARAGEM,
+                                    TIPO_TELEFONE: '<i class="fad fa-bars"></i></label> ' + val.TIPO_TELEFONE,
+                                    OPERADORA: '<i class="fas fa-list-alt"></i> ' + val.OPERADORA,
+                                    SETOR: '<label class="class_nome"><i class="fad fa-list"></i></label>' + setor
 
                                 });
+                            } else {
+                                dado = [];
                             }
                         });
                     },
@@ -201,15 +222,15 @@
             $("tr").addClass("bar_top")
 
             // PARA ATIVAR EVENTOS do tipo keyup
-            /*
-             $('#doc').keyup(function () {
-             var tabela = $('#info')
-             tabela.bootstrapTable('refreshOptions', {
-             data: loadingData()
-             })
-             //$("tr").addClass("bar_top")
-             });
-             */
+
+            $('#id_telefone_cadastro').keyup(function () {
+                var tabela = $('#info')
+                tabela.bootstrapTable('refreshOptions', {
+                    data: loadingData()
+                })
+                //$("tr").addClass("bar_top")
+            });
+
 
 
         </script>

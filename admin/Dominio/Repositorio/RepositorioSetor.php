@@ -20,5 +20,6 @@ interface RepositorioSetor {
     public function createSetor(setor $setor): bool;
     public function updateSetor(setor $setor): bool;
     public function readSetor(setor $setor): array;
+    public function seachReadSetor(setor $setor): array;
     public function delete(setor $setor): bool;
 }

@@ -1,0 +1,61 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 26 de mai. de 2022, 15:30:01
+    Author     : Rubens
+*/
+
+.splash{
+    
+    padding: 15.5rem;
+    z-index: 100;
+    background: white;
+    border-bottom: rgba(0,0,0,0.1) solid 1px;
+    transition: all 7.5s;
+}
+
+.splash{
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #a3b0c9;
+    z-index: 200;
+    color: white;
+    text-align: center;
+    line-height: 190vh;
+}
+
+.splash.display-none{
+    
+    position: fixed;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #a3b0c9;
+    z-index: -10;
+    color: #000;
+    text-align: center;
+    line-height: 190vh;
+    transition: all 0.9s
+}
+
+
+@keyframes fadeIn{
+    to{
+        opacity: 2;
+    }
+}
+
+.fade-in{
+    opacity: 0;
+    animation: fadeIn 5s ease-in forwards;
+    color: #000;
+    margin-top: -50px
+}

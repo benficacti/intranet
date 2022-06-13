@@ -52,9 +52,16 @@ class PdoRepositorioTelefoneUsuario implements RepositorioTelefoneUsuario {
 
     public function salvarTelefoneUsuario(telefoneUsuario $telUsuario): bool {
         if ($telUsuario->getId_telefone_usuario() === null) {
+            $verificarNumLiberado = $this->verificaNumLiberado($telUsuario);
+            if ($verificarNumLiberado) {
+                $this->updateTelefoneUsuarioStatus($telUsuario);
+            }
+            $verifica = $this->verificaTelefone($telUsuario);
+            if ($verifica) {
+                return $this->updateTelefoneUsuario($telUsuario);
+            }
             return $this->createTelefoneUsuario($telUsuario);
         }
-        return $this->updateTelefoneUsuario($telUsuario);
     }
 
     public function todosTelefoneUsuario(): array {
@@ -62,8 +69,8 @@ class PdoRepositorioTelefoneUsuario implements RepositorioTelefoneUsuario {
     }
 
     public function updateTelefoneUsuario(telefoneUsuario $telUsuario): bool {
-        $sqlUpdate = 'UPDATE TELEFONE_USUARIO SET ID_STATUS_VISUALIZACAO = :ID_STAT,'
-                . 'ID_NOME_AGENDA = :ID_NOME_AGENDA WHERE ID_TELEFONE = :ID_TEL;';
+        $sqlUpdate = 'UPDATE TELEFONE_USUARIO SET ID_STATUS_VISUALIZACAO =:ID_STAT,'
+                . 'ID_NOME_AGENDA =:ID_NOME_AGENDA WHERE ID_TELEFONE =:ID_TEL and ID_NOME_AGENDA =:ID_NOME_AGENDA;';
         $stmt = $this->conexao->prepare($sqlUpdate);
         $stmt->bindValue(':ID_STAT', $telUsuario->getId_status_visualizacao(), \PDO::PARAM_INT);
         $stmt->bindValue(':ID_NOME_AGENDA', $telUsuario->getId_nome_agenda(), \PDO::PARAM_INT);
@@ -76,12 +83,11 @@ class PdoRepositorioTelefoneUsuario implements RepositorioTelefoneUsuario {
     }
 
     public function verificaTelefone(telefoneUsuario $telUsuario) {
-        $status = 1;
-        $sqlQuery = 'SELECT T.ID_TELEFONE_USUARIO TEL FROM TELEFONE_USUARIO T WHERE T.ID_TELEFONE = :id_tel '
-                . 'AND ID_STATUS_VISUALIZACAO = :id_status;';
+
+        $sqlQuery = 'SELECT T.ID_TELEFONE_USUARIO TEL FROM TELEFONE_USUARIO T WHERE T.ID_TELEFONE = :id_tel and T.ID_NOME_AGENDA = :id_nome_agenda ';
         $stmt = $this->conexao->prepare($sqlQuery);
         $stmt->bindValue(':id_tel', $telUsuario->getId_telefone(), \PDO::PARAM_INT);
-        $stmt->bindValue(':id_status', $status, \PDO::PARAM_INT);
+        $stmt->bindValue(':id_nome_agenda', $telUsuario->getId_nome_agenda(), \PDO::PARAM_INT);
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
             return true;
@@ -105,6 +111,30 @@ class PdoRepositorioTelefoneUsuario implements RepositorioTelefoneUsuario {
         }
 
         return $inf;
+    }
+
+    public function verificaNumLiberado(telefoneUsuario $telUsuario) {
+
+        $sqlQuery = 'SELECT T.ID_TELEFONE_USUARIO TEL FROM TELEFONE_USUARIO T WHERE T.ID_TELEFONE = :id_tel';
+        $stmt = $this->conexao->prepare($sqlQuery);
+        $stmt->bindValue(':id_tel', $telUsuario->getId_telefone(), \PDO::PARAM_INT);
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function updateTelefoneUsuarioStatus($telUsuario) {
+
+        $sqlUpdate = 'UPDATE TELEFONE_USUARIO SET ID_STATUS_VISUALIZACAO = 2 WHERE ID_STATUS_VISUALIZACAO = 3;';
+        $stmt = $this->conexao->prepare($sqlUpdate);
+        $success = $stmt->execute();
+        if ($success) {
+            $this->conexao->lastInsertId();
+        }
+        return $success;
     }
 
 }

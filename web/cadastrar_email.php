@@ -30,12 +30,12 @@
 
                     <div class="painel_listagem_email">
                         <div class="col-md-12 text-center" style="margin:0 auto; height:30px; margin-top: 2vh;">
-                            <label class="title_cartoes_pendentes text-title-table">CADASTRO DE EMAIL</label>
+                            <label class="title_cartoes_pendentes text-title-table class_title">CADASTRO DE EMAIL</label>
                         </div>
                         <div class="col-md-12" style="margin:0 auto;">
-                            <div class="col-md-12 text-left" style=" background-color:#3b3d84;
+                            <div class="col-md-12 text-left" style=" background-color:#0069D9;
                                  color:white; height:40px; border-radius: 8px">
-                                <input type="text" name="cpf_cadastro" class="text-input-table" id="id_new_email" placeholder="novoemail@gmail.com.br" style="width: 60%" autofocus="true">
+                                <input type="email" name="cpf_cadastro" class="text-input-table" id="id_new_email" placeholder="novoemail@gmail.com.br" style="width: 60%" autofocus="true">
                                 <button class="text-input-table btn-primary" style=" width: 35%; background: #005cbf; color: #FFF" onclick="cadastrar_email()">CADASTRAR</button>
                             </div>
                         </div>
@@ -59,6 +59,7 @@
 
                     </div>
                 </div>
+
             </div>
             <!-- /#page-content-wrapper -->
 
@@ -86,7 +87,18 @@
             function cadastrar_email() {
                 var email = document.getElementById('id_new_email').value;
                 //button automático event click cast parse
+                var email_style = document.getElementById('id_new_email');
 
+                if (email.length < 5) {
+                    email_style.style.boxShadow = "3px 3px 3px 3px #ff0000";
+                    email_style.focus();
+                    return false;
+                }
+                if (!email.includes("@")) {
+                    alert(email + ' NÃO É UM EMAIL VÁLIDO!');
+                    email_style.focus();
+                    return false;
+                }
 
                 $.ajax({
 

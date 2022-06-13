@@ -1,12 +1,12 @@
  <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                                      class="img_vector"
-                                     viewBox="0 0 702.000000 553.000000"
+                                     viewBox="20 0 640.000000 604.000000"
                                      preserveAspectRatio="xMidYMid meet">
 
                                 <g transform="translate(0.000000,553.000000) scale(0.100000,-0.100000)"
-                                   id="item_vector" stroke="none">
+                                   id="item_vector" fill="#03a6d7" stroke="none">
                                 <linearGradient id="gradient" x2="1" y2="1">
-                                <stop offset="0%" stop-color="#803dd1" />
+                                <stop offset="0%" stop-color="#AB00CC" />
                                 <stop offset="100%" stop-color="#6200ff" />
                                 </linearGradient>
                                 <path d="M3280 4929 c-904 -98 -1657 -694 -1954 -1546 -87 -251 -120 -460

@@ -34,7 +34,7 @@ class PdoRepositorioSetor implements RepositorioSetor {
         $stmt->bindValue(':priv_key_setor', $setor->getPrivate_key_setor(), \PDO::PARAM_STR);
         $success = $stmt->execute();
         if ($success) {
-            
+
             //CRIAR HASH AUTOMATICAMENTE
             $table = 'SETOR';
             $field_set = 'PRIVATE_KEY_SETOR';
@@ -53,7 +53,10 @@ class PdoRepositorioSetor implements RepositorioSetor {
     }
 
     public function readSetor(setor $setor): array {
-        
+        $sqlSetor = 'SELECT * FROM SETOR WHERE PRIVATE_KEY_SETOR = "' . $setor->getPrivate_key_setor() . '"';
+        $stmt = $this->conexao->query($sqlSetor);
+        $stmt->execute();
+        return $this->buscaSetores($stmt);
     }
 
     public function salvarSetor(setor $setor): bool {
@@ -86,10 +89,34 @@ class PdoRepositorioSetor implements RepositorioSetor {
         foreach ($listaDadosSetores as $dadosSetores) {
             $inf [] = array(
                 "SETOR" => $dadosSetores->DESC_SETOR,
-                "HASH" => $dadosSetores->PRIVATE_KEY_SETOR
+                "HASH_PRIVATE_SETOR" => $dadosSetores->PRIVATE_KEY_SETOR,
+                "HASH_ID" => $dadosSetores->ID_SETOR
             );
         }
         return $inf;
+    }
+
+    public function buscaSetores(\PDOStatement $stmt) {
+
+        $listarSetores = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach ($listarSetores as $dadosSetores) {
+            $inf [] = array(
+                "RESULT" => "TRUE",
+                "SETOR" => $dadosSetores->DESC_SETOR,
+                "HASH_PRIVATE_SETOR" => $dadosSetores->PRIVATE_KEY_SETOR,
+                "HASH_ID" => $dadosSetores->ID_SETOR
+            );
+        }
+        return $inf;
+    }
+
+    public function seachReadSetor(setor $setor): array {
+        $sqlQuery = 'SELECT * FROM SETOR WHERE DESC_SETOR LIKE :hashSetor;';
+        $stmt = $this->conexao->prepare($sqlQuery);
+        $stmt->bindValue(':hashSetor', "%" . $setor->getDesc_setor() . "%", \PDO::PARAM_STR);
+        $stmt->execute();
+        return $this->listaSetores($stmt);
     }
 
 }

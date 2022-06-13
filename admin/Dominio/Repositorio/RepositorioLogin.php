@@ -19,4 +19,6 @@ interface RepositorioLogin {
     public function createLogin(login $login):bool;
     public function updateLogin(login $login):bool;
     public function deleteLogin(login $login):bool;
+    public function todosLogin():array;
+    public function readLogin(login $login):array;
 }
