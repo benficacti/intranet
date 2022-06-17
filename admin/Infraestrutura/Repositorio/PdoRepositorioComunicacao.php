@@ -78,6 +78,7 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
     public function createComunicacao(comunicacao $comunicacao): bool {
 
         try {
+            $success = false;
             $ind = 1;
             $cod_increment = $this->cod_increment($ind);
 
@@ -87,28 +88,53 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
                 $cod_increment = $cod_increment + 1;
             }
 
-            $sqlInsert = "INSERT INTO comunicacao (TITULO_COM, MENSAGEM_COM, HORA_CRIACAO_COM,"
-                    . "DATA_CRIACAO_COM, HORA_EXPIRAR_COM, DATA_EXPIRAR_COM, ID_LOGIN_COM, "
-                    . "ID_TIPO_COM, ID_NIVEL_PRIORIDADE_COM, ID_URL_TOP_COM, ID_URL_BOTTOM_COM, "
-                    . "ID_ANEXO_COM, ID_EMPRESA_COM, ID_STATUS_COM, ID_VAGAS_EMPREGO, CODIGO_COM, PRIVATE_KEY_COMUNICACAO)"
-                    . " VALUES (:titulo, :mensagem, CURTIME(), CURDATE(), CURTIME(), CURDATE(),"
-                    . " :ID_LOGIN_COM, :ID_TIPO_COM, :ID_NIVEL_PRIORIDADE_COM, :ID_URL_TOP_COM, :ID_URL_BOTTOM_COM,"
-                    . " :ID_ANEXO_COM, :ID_EMPRESA_COM, :ID_STATUS_COM, :ID_VAGAS_EMPREGO, :CODIGO_COM, :PRIVATE_KEY_COMUNICACAO);";
-            $stmt = $this->conexao->prepare($sqlInsert);
-            $stmt->bindValue(':titulo', $comunicacao->getTitulo_com(), PDO::PARAM_STR);
-            $stmt->bindValue(':mensagem', $comunicacao->getMensagem_com(), PDO::PARAM_STR);
-            $stmt->bindValue(':ID_LOGIN_COM', $comunicacao->getId_login_com(), PDO::PARAM_INT);
-            $stmt->bindValue(':ID_TIPO_COM', $comunicacao->getId_tipo_com(), PDO::PARAM_INT);
-            $stmt->bindValue(':ID_NIVEL_PRIORIDADE_COM', $comunicacao->getId_nivel_prioridade_com(), PDO::PARAM_INT);
-            $stmt->bindValue(':ID_URL_TOP_COM', $comunicacao->getId_url_top_com(), PDO::PARAM_INT);
-            $stmt->bindValue(':ID_URL_BOTTOM_COM', $comunicacao->getId_url_bottom_com(), PDO::PARAM_INT);
-            $stmt->bindValue(':ID_EMPRESA_COM', $comunicacao->getId_empresa_com(), PDO::PARAM_INT);
-            $stmt->bindValue(':ID_ANEXO_COM', $comunicacao->getId_anexo_com(), PDO::PARAM_INT);
-            $stmt->bindValue(':ID_STATUS_COM', $comunicacao->getId_status_com(), PDO::PARAM_INT);
-            $stmt->bindValue(':ID_VAGAS_EMPREGO', $comunicacao->getId_vagas_emprego(), PDO::PARAM_INT);
-            $stmt->bindValue(':CODIGO_COM', $cod_increment, PDO::PARAM_INT);
-            $stmt->bindValue(':PRIVATE_KEY_COMUNICACAO', $comunicacao->getPrivate_key_comunicacao(), PDO::PARAM_STR);
-            $success = $stmt->execute();
+            if ($comunicacao->getId_vagas_emprego() !== null) {
+                $sqlInsert = "INSERT INTO comunicacao (TITULO_COM, MENSAGEM_COM, HORA_CRIACAO_COM,"
+                        . "DATA_CRIACAO_COM, HORA_EXPIRAR_COM, DATA_EXPIRAR_COM, ID_LOGIN_COM, "
+                        . "ID_TIPO_COM, ID_NIVEL_PRIORIDADE_COM, ID_URL_TOP_COM, ID_URL_BOTTOM_COM, "
+                        . "ID_ANEXO_COM, ID_EMPRESA_COM, ID_STATUS_COM, ID_VAGAS_EMPREGO, CODIGO_COM, PRIVATE_KEY_COMUNICACAO)"
+                        . " VALUES (:titulo, :mensagem, CURTIME(), CURDATE(), CURTIME(), CURDATE(),"
+                        . " :ID_LOGIN_COM, :ID_TIPO_COM, :ID_NIVEL_PRIORIDADE_COM, :ID_URL_TOP_COM, :ID_URL_BOTTOM_COM,"
+                        . " :ID_ANEXO_COM, :ID_EMPRESA_COM, :ID_STATUS_COM, :ID_VAGAS_EMPREGO, :CODIGO_COM, :PRIVATE_KEY_COMUNICACAO);";
+                $stmt = $this->conexao->prepare($sqlInsert);
+                $stmt->bindValue(':titulo', $comunicacao->getTitulo_com(), PDO::PARAM_STR);
+                $stmt->bindValue(':mensagem', $comunicacao->getMensagem_com(), PDO::PARAM_STR);
+                $stmt->bindValue(':ID_LOGIN_COM', $comunicacao->getId_login_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_TIPO_COM', $comunicacao->getId_tipo_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_NIVEL_PRIORIDADE_COM', $comunicacao->getId_nivel_prioridade_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_URL_TOP_COM', $comunicacao->getId_url_top_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_URL_BOTTOM_COM', $comunicacao->getId_url_bottom_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_EMPRESA_COM', $comunicacao->getId_empresa_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_ANEXO_COM', $comunicacao->getId_anexo_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_STATUS_COM', $comunicacao->getId_status_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_VAGAS_EMPREGO', $comunicacao->getId_vagas_emprego(), PDO::PARAM_INT);
+                $stmt->bindValue(':CODIGO_COM', $cod_increment, PDO::PARAM_INT);
+                $stmt->bindValue(':PRIVATE_KEY_COMUNICACAO', $comunicacao->getPrivate_key_comunicacao(), PDO::PARAM_STR);
+                $success = $stmt->execute();
+            } else {
+                $sqlInsert = "INSERT INTO comunicacao (TITULO_COM, MENSAGEM_COM, HORA_CRIACAO_COM,"
+                        . "DATA_CRIACAO_COM, HORA_EXPIRAR_COM, DATA_EXPIRAR_COM, ID_LOGIN_COM, "
+                        . "ID_TIPO_COM, ID_NIVEL_PRIORIDADE_COM, ID_URL_TOP_COM, ID_URL_BOTTOM_COM, "
+                        . "ID_ANEXO_COM, ID_EMPRESA_COM, ID_STATUS_COM, ID_VAGAS_EMPREGO, CODIGO_COM, PRIVATE_KEY_COMUNICACAO)"
+                        . " VALUES (:titulo, :mensagem, CURTIME(), CURDATE(), CURTIME(), CURDATE(),"
+                        . " :ID_LOGIN_COM, :ID_TIPO_COM, :ID_NIVEL_PRIORIDADE_COM, :ID_URL_TOP_COM, :ID_URL_BOTTOM_COM,"
+                        . " :ID_ANEXO_COM, :ID_EMPRESA_COM, :ID_STATUS_COM, :ID_VAGAS_EMPREGO, :CODIGO_COM, :PRIVATE_KEY_COMUNICACAO);";
+                $stmt = $this->conexao->prepare($sqlInsert);
+                $stmt->bindValue(':titulo', $comunicacao->getTitulo_com(), PDO::PARAM_STR);
+                $stmt->bindValue(':mensagem', $comunicacao->getMensagem_com(), PDO::PARAM_STR);
+                $stmt->bindValue(':ID_LOGIN_COM', $comunicacao->getId_login_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_TIPO_COM', $comunicacao->getId_tipo_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_NIVEL_PRIORIDADE_COM', $comunicacao->getId_nivel_prioridade_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_URL_TOP_COM', $comunicacao->getId_url_top_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_URL_BOTTOM_COM', $comunicacao->getId_url_bottom_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_EMPRESA_COM', $comunicacao->getId_empresa_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_ANEXO_COM', $comunicacao->getId_anexo_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_STATUS_COM', $comunicacao->getId_status_com(), PDO::PARAM_INT);
+                $stmt->bindValue(':ID_VAGAS_EMPREGO', $comunicacao->getId_vagas_emprego(), PDO::PARAM_INT);
+                $stmt->bindValue(':CODIGO_COM', $cod_increment, PDO::PARAM_INT);
+                $stmt->bindValue(':PRIVATE_KEY_COMUNICACAO', $comunicacao->getPrivate_key_comunicacao(), PDO::PARAM_STR);
+                $success = $stmt->execute();
+            }
 
             if ($success) {
 
@@ -187,7 +213,7 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
         }
         return $inf;
     }
-    
+
     public function hidrataComunicacaoVaga(\PDOStatement $stmt): array {
 
         $listaDadosComunicacao = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -229,6 +255,50 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
         foreach ($dataList as $dataHash) {
             return $dataHash->DESC_SETOR;
         }
+    }
+
+    public function alertasComunicacoes(): array {
+
+        $sqlAlertaComunicacao = 'SELECT 
+                                    C.MENSAGEM_COM MSN,
+                                    S.DESC_SETOR SETOR,
+                                    C.DATA_CRIACAO_COM D_CRIADO,
+                                    C.HORA_CRIACAO_COM H_CRIADO,
+                                    C.ID_STATUS_COM STATUS_C,
+                                    C.CODIGO_COM COD,
+                                    C.ID_TIPO_COM TIPO_COMUNICACAO
+                                    FROM COMUNICACAO C 
+                                    INNER JOIN LOGIN L ON L.ID_LOGIN = C.ID_LOGIN_COM
+                                    INNER JOIN USUARIO U ON U.id_usuario = L.ID_USUARIO_LOGIN
+                                    INNER JOIN SETOR S ON S.ID_SETOR = U.id_setor_usuario
+                                    WHERE C.ID_STATUS_COM = 1';
+        $stmt = $this->conexao->query($sqlAlertaComunicacao);
+        $stmt->execute();
+        if($stmt->rowCount() > 0){
+            return $this->hidrataAlertaComunicacao($stmt);
+        }else{
+            $inf[] = array('RESULT' => 'FALSE');
+             return $inf;
+        }
+        
+    }
+
+    public function hidrataAlertaComunicacao(\PDOStatement $stmt) {
+        $listarAlertaComunicacao = $stmt->fetchAll(\PDO::FETCH_OBJ);
+
+        foreach ($listarAlertaComunicacao as $dadosAletaComunicacao) {
+            $inf[] = array(
+                "RESULT" => "TRUE",
+                "MSN" => $dadosAletaComunicacao->MSN,
+                "SETOR" => $dadosAletaComunicacao->SETOR,
+                "D_CRIADO" => $dadosAletaComunicacao->D_CRIADO,
+                "H_CRIADO" => $dadosAletaComunicacao->H_CRIADO,
+                "STATUS_C" => $dadosAletaComunicacao->STATUS_C,
+                "TIPO_COMUNICACAO" => $dadosAletaComunicacao->TIPO_COMUNICACAO,
+                "COD" => $dadosAletaComunicacao->COD
+            );
+        }
+        return $inf;
     }
 
 }

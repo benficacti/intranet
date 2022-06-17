@@ -21,6 +21,7 @@ interface RepositorioComunicacao {
     //put your code here
 
     public function todasComunicacoes(): array;
+    public function alertasComunicacoes(): array;
     public function salvar(comunicacao $comunicacao): bool;
     public function createComunicacao(comunicacao $comunicacao): bool;
     public function readComunicaco(comunicacao $comunicacao): array;

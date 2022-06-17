@@ -64,32 +64,8 @@ var_dump($repositorio->todosEmails());
 */
 //var_dump($repositorio2->updateComunicacao($comunicacao));
 
-$titulo_com = 'VAGAS DE EMPREGO';
-$mensagem_com = null;
-$hora_criacao_com = null;
-$data_criacao_com = null;
-$hora_expirar_com = null;
-$data_expirar_com = null;
-$id_login_com = null;
-$id_tipo_com  = 1;
-$id_nivel_prioridade_com = 1;
-$id_url_top_com = null;
-$id_url_bottom_com = null;
-$id_anexo_com = null;
-$id_empresa_com = 1;
-$id_status_com = 1;
-$id_vagas_emprego = 1;
-$codigo_comunicacao = 2;
-$private_key_comunicacao = null;
-
-$comunicacao =  new comunicacao(null, $titulo_com, 
-        $mensagem_com, $hora_criacao_com, $data_criacao_com, 
-        $hora_expirar_com, $data_expirar_com, $id_login_com, 
-        $id_tipo_com, $id_nivel_prioridade_com, $id_url_top_com, 
-        $id_url_bottom_com, $id_anexo_com, $id_empresa_com, 
-        $id_status_com, $id_vagas_emprego, $codigo_comunicacao, 
-        $private_key_comunicacao);
-$repositorio2->salvar($comunicacao);
-
+$desc_setor = 'TRAFEGO';
+$setor = new setor(null, $desc_setor, null);
+//$repositorio7->salvarSetor($setor);
 echo '</pre>';
 

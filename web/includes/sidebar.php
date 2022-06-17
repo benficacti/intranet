@@ -34,8 +34,21 @@
             case 'painel':
                 echo '';
                 break;
-            default :
+            case 'agenda_contato':
+                echo '<a href="listagem_agenda" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>LISTAGEM</a>';
+                break;
+            case 'rh' :
                 echo '<a href="RH" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item" data-toggle="modal" data-target="#modal_select_auth"><i class="fad fa-id-card icons-side"></i>RH</a>';
+                break;
+            case 'apoioAdm' :
+                echo '<a href="apoioAdm" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item" data-toggle="modal" data-target="#modal_select_auth_adm"><i class="fad fa-id-card icons-side"></i>Apoio ADM.</a>';
+                break;
+            case 'apoioAdmTel' :
+                echo '<a href="apoioAdm" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item" data-toggle="modal" data-target="#modal_select_auth_adm"><i class="fad fa-id-card icons-side"></i>Apoio ADM.</a>';
+                break;
+            case 'apoioAdmEmail' :
+                echo '<a href="apoioAdm" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item" data-toggle="modal" data-target="#modal_select_auth_adm"><i class="fad fa-id-card icons-side"></i>Apoio ADM.</a>';
+                break;
         }
         ?>
 

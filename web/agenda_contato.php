@@ -27,7 +27,7 @@
 
             <!-- Sidebar -->
             <?php
-            $page = ''; // HABILITAR MENU NA TELA ATUAL
+            $page = 'agenda_contato'; // HABILITAR MENU NA TELA ATUAL
             include 'includes/sidebar.php';
             ?>
 

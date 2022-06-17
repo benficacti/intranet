@@ -21,7 +21,7 @@
 
             <!-- Sidebar -->
             <?php
-            $page = 'email'; // HABILITAR MENU NA TELA ATUAL
+            $page = 'apoioAdmEmail'; // HABILITAR MENU NA TELA ATUAL
             include 'includes/sidebar.php';
             ?>
 
@@ -55,7 +55,38 @@
 
                 </div>
 
+                <!-- MODAL AUTH INICIO -->
+                <div class="modal fade" id="modal_select_auth_adm" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content" id="id_painel_candidatar">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Faça seu acesso</h5>
+                                <button type="button" class="close" data-dismiss="modal" id="id_modal_vaga" aria-label="Close"  onclick="fechar()">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="id_auth">
+                                    <lottie-player src="./lottie_files/auth.json" mode="bounce" background="transparent"  speed="3" loop  style="width: 20vw; height: 10vh; margin: 0 auto"  autoplay></lottie-player>
+                                </div>
+                                <table class="table table-bordered" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 12px">
 
+                                    <thead style="font-size: 18px">
+                                        <tr style="background: #007bff; height: 1px">
+                                            <td scope="col" colspan="6"  style="padding: 2px"></td>
+                                        </tr>
+                                        <tr style="background: #32383e">
+                                            <td scope="col" colspan="5" ><input  class="form-control class_input_vaga" type="text" id="user" placeholder="Usuário" autocomplete="off"></td>
+                                            <td scope="col" colspan="5" ><input  class="form-control class_input_vaga" type="password" id="password" placeholder="Senha" autocomplete="off"></td>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <button class="form-control" style="background: #062c33; color: #FFF" onclick="modulo_rh()">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MODAL AUTH FIM -->
 
                 <div class="modal fade " id="modal_loading" role="dialog">
                     <div class="modal-dialog modal-dialog-centered">
@@ -205,6 +236,38 @@
                 })
                 //$("tr").addClass("bar_top")
             });
+
+
+            function modulo_rh() {
+                var user = document.getElementById('user').value;
+                var password = document.getElementById('password').value;
+                $.ajax({
+
+                    url: '../api.php',
+                    method: 'post',
+                    data: {request: 'auth_user',
+                        user: user,
+                        password: password
+
+                    }, success: function (data) {
+
+
+                        var obj = JSON.parse(data);
+                        obj.forEach(function (name, value) {
+                            if (name.RESULT === 'TRUE') {
+                                location.href = 'cadastrar_email';
+                            } else {
+                                res = '<lottie-player src="./lottie_files/auth_failed.json" mode="bounce" background="transparent"  speed="3"  style="width: 30vw; height: 20vh;"  autoplay></lottie-player>';
+                                document.getElementById('id_auth').innerHTML = res;
+                            }
+                        });
+
+
+                    }
+                });
+
+                // location.href = 'vagas_recursos_humanos';
+            }
 
 
         </script>

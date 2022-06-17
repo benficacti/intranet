@@ -93,6 +93,12 @@ use Rubens\Comercial\Model\login;
 
 $repositorio_login = new PdoRepositorioLogin(CriadorConexao::criarConexao());
 
+//TIPO_COMUNICACO
+use Rubens\Comercial\Infraestrutura\Repositorio\PdoRepositorioTipoComunicacao;
+use Rubens\Comercial\Model\tipoComunicacao;
+
+$repositorio_tipo_comunicacao = new PdoRepositorioTipoComunicacao(CriadorConexao::criarConexao());
+
 date_default_timezone_set('America/Fortaleza');
 $post = file_get_contents('php://input');
 /* CONNECTIONS */
@@ -221,8 +227,17 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
                     } else {
                         $info = $repositorio_setor->seachReadSetor($setor);
                     }
-
-
+                    break;
+                case "search_tipo_comunicado":
+                    $info = $repositorio_tipo_comunicacao->todosTiposComunicacao();
+                    break;
+                case "publicar_noticia":
+                    $id_nivel_prioridade_com = 1; //BAIXA (NÃO CRIAR POP UP)
+                    $id_anexo_com = null;
+                    $id_status_com = 1; //ATIVA
+                    $id_login_com = 3;
+                    $comunicacao = new comunicacao(null, null, $json->descricao, null, null, $json->hora_expirar, $json->data_expirar, $id_login_com, $json->tipo_noticia, $id_nivel_prioridade_com, null, null, $id_anexo_com, 1, $id_status_com, null, null, null);
+                    $info[] = ($repositorio_comunicacao->salvar($comunicacao)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
                     break;
                 case "search_empresa":
                     $info = $repositorio_empresa->todosEmpresa();
@@ -233,6 +248,12 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
                 case "search_vagas":
                     $comunicacao = new comunicacao(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $json->cod);
                     $info = $repositorio_comunicacao->readComunicaco($comunicacao);
+                    break;
+                case "noticiasAlert":
+                    $info = $repositorio_comunicacao->alertasComunicacoes();
+                    break;
+                case "notification":
+                    $info = $repositorio_comunicacao->alertasComunicacoes();
                     break;
                 case "update_descricao":
                     $comunicacao = new comunicacao(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, $json->hash_vagas_emprego);
@@ -392,6 +413,7 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
                     $agenda = new agenda(null, null, $id_nome_agenda, null, null, null, null);
                     $info = $repositorio_agenda->readAgenda($agenda);
                     break;
+
                 default:
                     $info[] = array(
                         'RESULT' => "false",

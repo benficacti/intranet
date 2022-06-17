@@ -385,7 +385,7 @@
 
                             document.getElementById('button_automatico_animation_check_comunicar_candidato').click();
                             setTimeout(() => {
-                                location.href = 'http://192.168.0.15/intranet/web/enviar_email?email=' + email + '&nome=' + nome_candidato + '&msn=' + msn_email;
+                                location.href = 'http://192.168.0.185/intranet/web/enviar_email?email=' + email + '&nome=' + nome_candidato + '&msn=' + msn_email;
                             }, 3000);
 
                         });

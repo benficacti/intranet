@@ -70,7 +70,7 @@
 
             <!-- Sidebar -->
             <?php
-            $page = ''; // HABILITAR MENU NA TELA ATUAL
+            $page = 'rh'; // HABILITAR MENU NA TELA ATUAL
             include 'includes/sidebar.php';
             ?>
 
@@ -559,9 +559,13 @@
                 setor = document.getElementById('id_setor_candidato_temp').value;
                 doc = document.getElementById('id_doc_candidato_vaga').value;
                 vaga = document.getElementById('id_vagas_emprego_temp').value;
+                email = document.getElementById('id_email_candidato_vaga').value;
                 
+                if(vaga.length < 1){
+                    alert('POR FAVOR, SELECIONE A VAGA NOVAMENTE!');
+                }
                 
-                if ( email.length > 0 && !email.includes("@") && !email.includes(".com")) {
+                if (email.length > 0 && !email.includes("@") && !email.includes(".com")) {
                     alert(email + ' NÃO É UM EMAIL VÁLIDO!');
                     email_style.focus();
                     return false;

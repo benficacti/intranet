@@ -28,7 +28,7 @@ $nome = filter_input(INPUT_GET, 'nome');
 $emailGet = filter_input(INPUT_GET, 'email');
 $msn = filter_input(INPUT_GET, 'msn');
 //$img = 'https://urbano.benficabbtt.com.br/wp-content/uploads/2015/11/logo-benfica.png';
-$img = 'http://localhost/intranet/web/img/new_bb.png';
+$img = 'http://192.168.0.185/intranet/web/img/new_bb.png';
 $hora = date('d/m/Y - H:i:s');
 //FIM
 
