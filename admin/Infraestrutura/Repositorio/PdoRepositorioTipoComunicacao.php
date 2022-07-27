@@ -27,7 +27,16 @@ class PdoRepositorioTipoComunicacao implements InReposistorioTipoComunicacao {
     }
 
     public function readTiposComunicacao(tipoComunicacao $tipoComunicacao): array {
+        if ($tipoComunicacao->getId_tipo_comunicacao() == 5) { //SETOR RECURSOS HUMANOS
+            $sqlReadTipoComunicacao = 'SELECT * FROM TIPO_COMUNICACAO T WHERE T.ID_TIPO_COMUNICACAO = 1;';
+        } else if ($tipoComunicacao->getId_tipo_comunicacao() == 17) { //SETOR MARKETING
+            $sqlReadTipoComunicacao = 'SELECT * FROM TIPO_COMUNICACAO T WHERE T.ID_TIPO_COMUNICACAO != 1;';
+        }
         
+        $stmt = $this->conexao->prepare($sqlReadTipoComunicacao);
+        //$stmt->bindValue(':idTCom', $tipoComunicacao->getId_tipo_comunicacao(), \PDO::PARAM_INT);
+        $stmt->execute();
+        return $this->hidrataTiposComunicacao($stmt);
     }
 
     public function todosTiposComunicacao(): array {

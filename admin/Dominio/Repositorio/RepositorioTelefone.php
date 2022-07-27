@@ -23,6 +23,7 @@ interface RepositorioTelefone {
     public function createTelefone(telefone $telefone): bool;
     public function readTelefone(telefone $telefone): array;
     public function readSearchTelefone(telefone $telefone): array;
+    public function readSearchRamal(telefone $telefone): array;
     public function updateTelefone(telefone $telefone): bool;
     public function deleteTelefone(telefone $telefone): bool;
 }

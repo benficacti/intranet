@@ -162,7 +162,7 @@ class PdoRepositorioTelefone implements RepositorioTelefone {
                 "D_SETOR" => $dadosReadTelefone->D_SETOR,
                 "GARAGEM" => $dadosReadTelefone->GARAGEM,
                 "TIPO_TELEFONE" => $dadosReadTelefone->TIPO_TELEFONE,
-                "PRIVATE_KEY_TELEFONE" => $dadosReadTelefone->HASH_TELEFONE
+                "HASH_PRIVATE_TELEFONE" => $dadosReadTelefone->HASH_TELEFONE
             );
         }
         return $inf;
@@ -182,7 +182,7 @@ class PdoRepositorioTelefone implements RepositorioTelefone {
                         INNER JOIN operadora o ON o.ID_OPERADORA = t.ID_OPERADORA
                         INNER JOIN garagem g ON g.ID_GARAGEM = t.ID_GARAGEM
                         INNER JOIN tipo_telefone tt ON tt.ID_TIPO_TELEFONE = t.ID_TIPO_TELEFONE
-                        LEFT JOIN telefone_usuario tu ON tu.ID_TELEFONE = t.ID_TELEFONE
+                        LEFT JOIN telefone_usuario tu ON tu.ID_TELEFONE = t.ID_TELEFONE or tu.ID_TELEFONE_RAMAL = t.ID_TELEFONE
                         LEFT JOIN setor s ON s.ID_SETOR = t.ID_SETOR_TELEFONE
                         WHERE tu.ID_STATUS_VISUALIZACAO = 3 OR tu.ID_STATUS_VISUALIZACAO IS null';
         $stmt = $this->conexao->query($sqlConsulta);
@@ -212,6 +212,37 @@ class PdoRepositorioTelefone implements RepositorioTelefone {
                         WHERE t.PRIVATE_KEY_TELEFONE LIKE :hasTel';
         $stmt = $this->conexao->prepare($sqlTelefone);
         $stmt->bindValue(':hasTel', $telefone->getPrivate_key_telefone(), \PDO::PARAM_STR);
+        $stmt->execute();
+        $row = $stmt->rowCount();
+        if ($row < 1) {
+            $inf[] = array(
+                "RESULT" => "FALSE");
+            return $inf;
+        } else {
+            return $this->hidrataReadTelefone($stmt);
+        }
+    }
+    
+    
+    
+    public function readSearchRamal(telefone $telefone): array {
+            
+        $sqlTelefone = 'SELECT 
+                        t.ID_TELEFONE ID_TELEFONE,
+                        t.NUM_TELEFONE TELEFONE,
+                        g.DESCRICAO GARAGEM,
+                        tt.DESCRICAO TIPO_TELEFONE,
+                        o.NOME OPERADORA,
+                        s.DESC_SETOR D_SETOR,
+                        t.PRIVATE_KEY_TELEFONE HASH_TELEFONE
+                        FROM telefone t 
+                        INNER JOIN operadora o ON o.ID_OPERADORA = t.ID_OPERADORA
+                        INNER JOIN garagem g ON g.ID_GARAGEM = t.ID_GARAGEM
+                        INNER JOIN tipo_telefone tt ON tt.ID_TIPO_TELEFONE = t.ID_TIPO_TELEFONE
+                        LEFT JOIN setor s ON s.ID_SETOR = t.ID_SETOR_TELEFONE 
+                        WHERE t.NUM_TELEFONE = :numRamal ';
+        $stmt = $this->conexao->prepare($sqlTelefone);
+        $stmt->bindValue(':numRamal', $telefone->getNum_telefone(), \PDO::PARAM_STR);
         $stmt->execute();
         $row = $stmt->rowCount();
         if ($row < 1) {

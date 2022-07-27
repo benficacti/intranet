@@ -22,11 +22,17 @@
                 echo '<a href="vagas_recursos_humanos" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>PUBLICAR</a>';
                 echo '<a href="vagas_candidatos" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>VISUALIZAR</a>';
                 break;
-            case 'publicar_vaga':
+            case 'vagas_candidatos':
                 echo '<a href="vagas_recursos_humanos" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>PUBLICAR</a>';
+                echo '<a href="cadastrar_vagas" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>CADASTRAR</a>';
                 break;
-            case 'visualizar_vaga':
+            case 'vagas_recursos_humanos':
                 echo '<a href="vagas_candidatos" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>VISUALIZAR</a>';
+                echo '<a href="cadastrar_vagas" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>CADASTRAR</a>';
+                break;
+            case 'cadastrar_vaga':
+                echo '<a href="vagas_candidatos" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>VISUALIZAR</a>';
+                echo '<a href="vagas_recursos_humanos" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>PUBLICAR</a>';
                 break;
             case 'novo_telefone':
                 echo '<a href="menu_telefone_uteis" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>LISTAGEM</a>';
@@ -49,6 +55,24 @@
             case 'apoioAdmEmail' :
                 echo '<a href="apoioAdm" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item" data-toggle="modal" data-target="#modal_select_auth_adm"><i class="fad fa-id-card icons-side"></i>Apoio ADM.</a>';
                 break;
+            case 'marketing' :
+                echo '<a href="######" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item" data-toggle="modal" data-target="#modal_select_auth_marketing"><i class="fad fa-id-card icons-side"></i>Marketing</a>';
+                echo '<a href="solicitacoes" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>Solicitacoes</a>';
+                break;
+            case 'solicitacoes' :
+                echo '<a href="marketing" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item" ><i class="fad fa-id-card icons-side"></i>Midias</a>';
+                break;
+            case 'marketing_gerencial' :
+                echo '<a href="publicacao?page=m" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>Divulgação</a>';
+                echo '<a href="######" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>Documentos</a>';
+                echo '<a href="marketing_gerencial_pedidos" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>Pedidos</a>';
+                break;
+            case 'publicacao_marketing' :
+                echo '<a href="marketing" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>Midias</a>';
+                echo '<a href="######" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>Documentos</a>';
+                echo '<a href="######" id="side_solicitacoes" class="list-group-item list-group-item-action bg back_side_item"><i class="fad fa-id-card icons-side"></i>Pedidos</a>';
+                break;
+            default :
         }
         ?>
 

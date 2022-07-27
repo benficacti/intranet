@@ -27,11 +27,18 @@ class PdoRepositorioTipoVaga implements RepositorioTipoVaga {
     }
 
     public function createTipoVaga(tipoVaga $tipoVaga): bool {
-        
+        $insertTipoVaga = 'INSERT INTO TIPO_VAGA (DESC_TIPO_VAGA) VALUES (:descTipovaga);';
+        $stmt = $this->conexao->prepare($insertTipoVaga);
+        $stmt->bindValue(':descTipovaga', $tipoVaga->getDesc_tipo_vaga(), \PDO::PARAM_STR);
+        $success = $stmt->execute();
+        return $success;
     }
 
     public function salvarTipoVaga(tipoVaga $tipoVaga): bool {
-        
+        if ($tipoVaga->getId_tipo_vaga() == null) {
+            return $this->createTipoVaga($tipoVaga);
+        }
+        return $this->updateTipoVaga($tipoVaga);
     }
 
     public function todosTiposVaga(): array {
@@ -43,7 +50,12 @@ class PdoRepositorioTipoVaga implements RepositorioTipoVaga {
     }
 
     public function updateTipoVaga(tipoVaga $tipoVaga): bool {
-        
+        $updateTipoVaga = 'UPDATE TIPO_VAGA SET DESC_TIPO_VAGA =:desVaga WHERE ID_TIPO_VAGA =:hash_id;';
+        $stmt = $this->conexao->prepare($updateTipoVaga);
+        $stmt->bindValue(':desVaga', $tipoVaga->getDesc_tipo_vaga(), \PDO::PARAM_STR);
+        $stmt->bindValue(':hash_id', $tipoVaga->getId_tipo_vaga(), \PDO::PARAM_INT);
+        $success = $stmt->execute();
+        return $success;
     }
 
     public function hidrataTiposVaga(\PDOStatement $stmt) {
@@ -61,7 +73,7 @@ class PdoRepositorioTipoVaga implements RepositorioTipoVaga {
 
     public function readTipoVaga(tipoVaga $tipoVaga): array {
 
-        $sqlTipoVaga = 'SELECT * FROM TIPO_VAGA WHERE DESC_TIPO_VAGA LIKE "%'.$tipoVaga->getDesc_tipo_vaga().'%"';
+        $sqlTipoVaga = 'SELECT * FROM TIPO_VAGA WHERE DESC_TIPO_VAGA LIKE "%' . $tipoVaga->getDesc_tipo_vaga() . '%"';
         $stmt = $this->conexao->query($sqlTipoVaga);
         $stmt->execute();
 

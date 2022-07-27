@@ -27,6 +27,7 @@ interface RepositorioEmail {
     public function createEmail(email $email): bool;
     public function readEmail(email $email): array;
     public function readEmailSearch(email $email): array;
+    public function readHashEmailSearch(email $email): array;
     public function updateEmail(email $email): bool;
     public function deleteEmail(email $email): bool;
 }

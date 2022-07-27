@@ -68,17 +68,24 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
     public function readAgenda(agenda $agenda): array {
 
         $sqlReadAgenda = '
-            SELECT 
+            SELECT 		
                 E.ENDERECO D_EMAIL,
                 T.NUM_TELEFONE N_TELEFONE,
-                S.DESC_SETOR D_SETOR
+                (SELECT 
+                         Ts.NUM_TELEFONE 
+                         FROM telefone Ts 
+                         WHERE Ts.ID_TELEFONE = TU.ID_TELEFONE_RAMAL
+                 ) NUM_RAMAL,
+                T.PRIVATE_KEY_TELEFONE HASH_PRIVATE_TELEFONE,
+                S.DESC_SETOR D_SETOR,
+                S.PRIVATE_KEY_SETOR HASH_PRIVATE_SETOR
                 FROM AGENDA A 
                 RIGHT JOIN TELEFONE_USUARIO TU ON TU.ID_TELEFONE_USUARIO = A.ID_TELEFONE_USUARIO
-                INNER JOIN EMAIL E ON E.ID_EMAIL =  A.ID_EMAIL
+                LEFT JOIN EMAIL E ON E.ID_EMAIL =  A.ID_EMAIL
                 INNER JOIN TELEFONE T ON T.ID_TELEFONE = TU.ID_TELEFONE AND TU.ID_STATUS_VISUALIZACAO  = 1
                 INNER JOIN NOME_AGENDA N ON N.ID_NOME_AGENDA = A.ID_NOME_AGENDA
-                INNER JOIN SETOR S ON S.ID_SETOR = A.ID_SETOR
-                WHERE N.ID_NOME_AGENDA =:idNome ';
+                LEFT JOIN SETOR S ON S.ID_SETOR = A.ID_SETOR
+                WHERE N.ID_NOME_AGENDA =  :idNome ';
         $stmt = $this->conexao->prepare($sqlReadAgenda);
         $stmt->bindValue(':idNome', $agenda->getId_nome_agenda(), PDO::PARAM_INT);
         $stmt->execute();
@@ -99,6 +106,7 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
                 return $this->updateAgenda($agenda);
             }
 
+
             return $this->createAgenda($agenda);
         }
     }
@@ -108,13 +116,18 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
                         N.NOME_AGENDA NOME_FUNC,
                         E.ENDERECO END_EMAIL,
                         T.NUM_TELEFONE NUM_TELEFONE,
+                        (SELECT 
+                         Ts.NUM_TELEFONE 
+                         FROM telefone Ts 
+                         WHERE Ts.ID_TELEFONE = TU.ID_TELEFONE_RAMAL
+                        ) NUM_RAMAL,
                         s.DESC_SETOR D_SETOR
                         FROM AGENDA A 
                         INNER JOIN NOME_AGENDA N ON A.ID_NOME_AGENDA = N.ID_NOME_AGENDA
-                        INNER JOIN EMAIL E ON E.ID_EMAIL = A.ID_EMAIL
+                        LEFT JOIN EMAIL E ON E.ID_EMAIL = A.ID_EMAIL
                         INNER JOIN TELEFONE_USUARIO TU ON TU.ID_TELEFONE_USUARIO =  A.ID_TELEFONE_USUARIO
-                        INNER JOIN TELEFONE T ON T.ID_TELEFONE =  TU.ID_TELEFONE
-                        INNER JOIN SETOR S ON S.ID_SETOR = A.ID_SETOR
+                        LEFT JOIN TELEFONE T ON T.ID_TELEFONE =  TU.ID_TELEFONE
+                        LEFT JOIN SETOR S ON S.ID_SETOR = A.ID_SETOR
                         WHERE A.ID_STATUS_VISUALIZACAO = 1';
 
         $stmt = $this->conexao->query($sqlAgenda);
@@ -123,12 +136,13 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
     }
 
     public function updateAgenda(agenda $agenda): bool {
-        $agenda->getId_agenda();
-        $agenda->getId_email();
-        $agenda->getId_nome_agenda();
-        $agenda->getId_telefone_usuario();
-        $agenda->getPrivate_key_agenda();
-        $sqlAgenda = "UPDATE AGENDA SET ID_STATUS_VISUALIZACAO = '" . $agenda->getId_status_visualizacao() . "' WHERE ID_NOME_AGENDA = '" . $agenda->getId_nome_agenda() . "';";
+        $id_email = '';
+        if ($agenda->getId_email() == '') {
+            $id_email = null;
+        } else {
+            $id_email = $agenda->getId_email();
+        };
+        $sqlAgenda = "UPDATE AGENDA SET ID_STATUS_VISUALIZACAO = '" . $agenda->getId_status_visualizacao() . "', ID_EMAIL = '" . $id_email . "' WHERE ID_NOME_AGENDA = '" . $agenda->getId_nome_agenda() . "';";
         $stmt = $this->conexao->prepare($sqlAgenda);
         $sucesso = $stmt->execute();
 
@@ -142,8 +156,11 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
             $inf [] = array(
                 "RESULT" => "TRUE",
                 "N_TELEFONE" => $dados->N_TELEFONE,
+                "NUM_RAMAL" => $dados->NUM_RAMAL,
+                "HASH_PRIVATE_TELEFONE" => $dados->HASH_PRIVATE_TELEFONE,
                 "D_EMAIL" => $dados->D_EMAIL,
-                "D_SETOR" => $dados->D_SETOR
+                "D_SETOR" => $dados->D_SETOR,
+                "HASH_PRIVATE_SETOR" => $dados->HASH_PRIVATE_SETOR
             );
         }
         return $inf;
@@ -174,6 +191,8 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
                 "NOME_FUNC" => $dadosTodosAgenda->NOME_FUNC,
                 "ENDER_EMAIL" => $dadosTodosAgenda->END_EMAIL,
                 "NUM_TELEFONE" => $dadosTodosAgenda->NUM_TELEFONE,
+                "NUM_RAMAL" => $dadosTodosAgenda->NUM_RAMAL,
+                "NUM_RAMAL" => $dadosTodosAgenda->NUM_RAMAL,
                 "D_SETOR" => $dadosTodosAgenda->D_SETOR
             );
         }
@@ -186,17 +205,23 @@ class PdoRepositorioAgenda implements RepositorioAgenda {
                         N.NOME_AGENDA NOME_FUNC,
                         E.ENDERECO END_EMAIL,
                         T.NUM_TELEFONE NUM_TELEFONE,
+                        (SELECT 
+                         Ts.NUM_TELEFONE 
+                         FROM telefone Ts 
+                         WHERE Ts.ID_TELEFONE = TU.ID_TELEFONE_RAMAL
+                        ) NUM_RAMAL,
                         s.DESC_SETOR D_SETOR
                         FROM AGENDA A 
                         INNER JOIN NOME_AGENDA N ON A.ID_NOME_AGENDA = N.ID_NOME_AGENDA
-                        INNER JOIN EMAIL E ON E.ID_EMAIL = A.ID_EMAIL
-                        INNER JOIN TELEFONE_USUARIO TU ON TU.ID_TELEFONE_USUARIO =  A.ID_TELEFONE_USUARIO
-                        INNER JOIN TELEFONE T ON T.ID_TELEFONE =  TU.ID_TELEFONE
-                        INNER JOIN SETOR S ON S.ID_SETOR = A.ID_SETOR
-                        WHERE N.NOME_AGENDA LIKE "%'.$agenda.'%" '
-                . 'OR E.ENDERECO LIKE "%'.$agenda.'%" '
-                . 'OR T.NUM_TELEFONE LIKE "%'.$agenda.'%" '
-                . 'OR S.DESC_SETOR LIKE "%'.$agenda.'%" AND A.ID_STATUS_VISUALIZACAO = 1';
+                        LEFT JOIN EMAIL E ON E.ID_EMAIL = A.ID_EMAIL
+                        LEFT JOIN TELEFONE_USUARIO TU ON TU.ID_TELEFONE_USUARIO =  A.ID_TELEFONE_USUARIO
+                        LEFT JOIN TELEFONE T ON T.ID_TELEFONE =  TU.ID_TELEFONE
+                        LEFT JOIN SETOR S ON S.ID_SETOR = A.ID_SETOR
+                        WHERE N.NOME_AGENDA LIKE "%' . $agenda . '%" '
+                . 'OR E.ENDERECO LIKE "%' . $agenda . '%" '
+                . 'OR T.NUM_TELEFONE LIKE "%' . $agenda . '%" '
+                . 'OR S.DESC_SETOR LIKE "%' . $agenda . '%" '
+                . 'AND A.ID_STATUS_VISUALIZACAO = 1';
 
         $stmt = $this->conexao->query($sqlAgenda);
         $stmt->execute();

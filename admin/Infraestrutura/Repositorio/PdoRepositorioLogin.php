@@ -81,6 +81,7 @@ class PdoRepositorioLogin implements RepositorioLogin {
         $sqlReadUsuario = 'SELECT 
                             S.nome_usuario N_USUARIO,
                             ST.DESC_SETOR D_SETOR,
+                            ST.ID_SETOR HASH_ID_SETOR,
                             L.SENHA D_SENHA,
                             L.ID_LOGIN HASH_ID_LOGIN,
                             L.PRIVATE_KEY_LOGIN HASH_LOGIN,
@@ -105,20 +106,26 @@ class PdoRepositorioLogin implements RepositorioLogin {
     }
 
     public function hidrataUsuario(\PDOStatement $stmt, $password): array {
-        session_start();
+        
         $listarUsuario = $stmt->fetchAll(PDO::FETCH_OBJ);
         foreach ($listarUsuario as $dadosUsuario) {
             if ($dadosUsuario->D_SENHA == $password) {
                 $_SESSION['id_login'] = $dadosUsuario->HASH_ID_LOGIN;
                 $_SESSION['id_perfil'] = $dadosUsuario->PERFIL;
+                $_SESSION['id_setor'] = $dadosUsuario->HASH_ID_SETOR;
                 $inf[] = array(
                     "RESULT" => 'TRUE',
                     "N_USUARIO" => $dadosUsuario->N_USUARIO,
                     "D_SETOR" => $dadosUsuario->D_SETOR,
+                    "HASH_ID_SETOR" => $dadosUsuario->HASH_ID_SETOR,
                     "PERFIL" => $dadosUsuario->PERFIL,
                     "D_SENHA" => $dadosUsuario->D_SENHA,
                     "HASH_ID_LOGIN" => $dadosUsuario->HASH_ID_LOGIN,
                     "HASH_LOGIN" => $dadosUsuario->HASH_LOGIN
+                );
+            } else {
+                $inf[] = array(
+                    "RESULT" => "FALSE"
                 );
             }
         }

@@ -22,9 +22,10 @@ interface RepositorioComunicacao {
 
     public function todasComunicacoes(): array;
     public function alertasComunicacoes(): array;
-    public function salvar(comunicacao $comunicacao): bool;
-    public function createComunicacao(comunicacao $comunicacao): bool;
+    public function salvar(comunicacao $comunicacao): array;
+    public function createComunicacao(comunicacao $comunicacao): array;
     public function readComunicaco(comunicacao $comunicacao): array;
-    public function updateComunicacao(comunicacao $comunicacao): bool;
+    public function updateComunicacao(comunicacao $comunicacao): array;
+    public function updateComunicacaoAnexo(comunicacao $comunicacao): bool;
     public function deleteComunicacao(comunicacao $comunicacao): bool;
 }

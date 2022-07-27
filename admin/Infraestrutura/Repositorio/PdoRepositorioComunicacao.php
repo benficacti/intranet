@@ -52,13 +52,15 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
                         c.DATA_EXPIRAR_COM DATA_EXPIRAR,
                         c.PRIVATE_KEY_COMUNICACAO HASH_COMUNICACAO,
                         v.DETALHE DESCRICAO,
-                        v.ID_VAGAS_EMPREGO HASH_ID_VAGAS
+                        v.ID_VAGAS_EMPREGO HASH_ID_VAGAS,
+                        im.URL_IMAGEM URL
                         FROM COMUNICACAO C 
                         INNER JOIN VAGAS_EMPREGO V ON v.ID_VAGAS_EMPREGO = c.ID_VAGAS_EMPREGO
                         INNER JOIN TIPO_VAGA T ON t.ID_TIPO_VAGA = c.ID_TIPO_COM
                         INNER JOIN SETOR S ON S.ID_SETOR = V.ID_SETOR
                         INNER JOIN PERIODO_TRABALHO P ON P.ID_PERIODO_TRABALHO =  V.ID_PERIODO_TRABALHO
                         INNER JOIN TIPO_VAGA TV ON TV.ID_TIPO_VAGA = V.ID_TIPO_VAGA
+                        LEFT JOIN IMAGEM IM ON IM.ID_IMAGEM = v.URL_ANEXO
                         INNER JOIN EMPRESA E ON E.ID_EMPRESA = C.ID_EMPRESA_COM
                         WHERE c.PRIVATE_KEY_COMUNICACAO =:hash_id';
         $stmt = $this->conexao->prepare($sqlConsulta);
@@ -67,15 +69,15 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
         return $this->hidrataComunicacaoVaga($stmt);
     }
 
-    public function salvar(comunicacao $comunicacao): bool {
+    public function salvar(comunicacao $comunicacao): array {
 
         if ($comunicacao->getId_comunicacao() === null) {
-            $this->createComunicacao($comunicacao);
+            return $this->createComunicacao($comunicacao);
         }
         return $this->updateComunicacao($comunicacao);
     }
 
-    public function createComunicacao(comunicacao $comunicacao): bool {
+    public function createComunicacao(comunicacao $comunicacao): array {
 
         try {
             $success = false;
@@ -93,12 +95,14 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
                         . "DATA_CRIACAO_COM, HORA_EXPIRAR_COM, DATA_EXPIRAR_COM, ID_LOGIN_COM, "
                         . "ID_TIPO_COM, ID_NIVEL_PRIORIDADE_COM, ID_URL_TOP_COM, ID_URL_BOTTOM_COM, "
                         . "ID_ANEXO_COM, ID_EMPRESA_COM, ID_STATUS_COM, ID_VAGAS_EMPREGO, CODIGO_COM, PRIVATE_KEY_COMUNICACAO)"
-                        . " VALUES (:titulo, :mensagem, CURTIME(), CURDATE(), CURTIME(), CURDATE(),"
+                        . " VALUES (:titulo, :mensagem, CURTIME(), CURDATE(), :HORA_EXPIRAR_COM, :DATA_EXPIRAR_COM,"
                         . " :ID_LOGIN_COM, :ID_TIPO_COM, :ID_NIVEL_PRIORIDADE_COM, :ID_URL_TOP_COM, :ID_URL_BOTTOM_COM,"
                         . " :ID_ANEXO_COM, :ID_EMPRESA_COM, :ID_STATUS_COM, :ID_VAGAS_EMPREGO, :CODIGO_COM, :PRIVATE_KEY_COMUNICACAO);";
                 $stmt = $this->conexao->prepare($sqlInsert);
                 $stmt->bindValue(':titulo', $comunicacao->getTitulo_com(), PDO::PARAM_STR);
                 $stmt->bindValue(':mensagem', $comunicacao->getMensagem_com(), PDO::PARAM_STR);
+                $stmt->bindValue(':HORA_EXPIRAR_COM', $comunicacao->getHora_expirar_com(), PDO::PARAM_STR);
+                $stmt->bindValue(':DATA_EXPIRAR_COM', $comunicacao->getData_expirar_com(), PDO::PARAM_STR);
                 $stmt->bindValue(':ID_LOGIN_COM', $comunicacao->getId_login_com(), PDO::PARAM_INT);
                 $stmt->bindValue(':ID_TIPO_COM', $comunicacao->getId_tipo_com(), PDO::PARAM_INT);
                 $stmt->bindValue(':ID_NIVEL_PRIORIDADE_COM', $comunicacao->getId_nivel_prioridade_com(), PDO::PARAM_INT);
@@ -116,12 +120,14 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
                         . "DATA_CRIACAO_COM, HORA_EXPIRAR_COM, DATA_EXPIRAR_COM, ID_LOGIN_COM, "
                         . "ID_TIPO_COM, ID_NIVEL_PRIORIDADE_COM, ID_URL_TOP_COM, ID_URL_BOTTOM_COM, "
                         . "ID_ANEXO_COM, ID_EMPRESA_COM, ID_STATUS_COM, ID_VAGAS_EMPREGO, CODIGO_COM, PRIVATE_KEY_COMUNICACAO)"
-                        . " VALUES (:titulo, :mensagem, CURTIME(), CURDATE(), CURTIME(), CURDATE(),"
+                        . " VALUES (:titulo, :mensagem, CURTIME(), CURDATE(), :HORA_EXPIRAR_COM, :DATA_EXPIRAR_COM,"
                         . " :ID_LOGIN_COM, :ID_TIPO_COM, :ID_NIVEL_PRIORIDADE_COM, :ID_URL_TOP_COM, :ID_URL_BOTTOM_COM,"
                         . " :ID_ANEXO_COM, :ID_EMPRESA_COM, :ID_STATUS_COM, :ID_VAGAS_EMPREGO, :CODIGO_COM, :PRIVATE_KEY_COMUNICACAO);";
                 $stmt = $this->conexao->prepare($sqlInsert);
                 $stmt->bindValue(':titulo', $comunicacao->getTitulo_com(), PDO::PARAM_STR);
                 $stmt->bindValue(':mensagem', $comunicacao->getMensagem_com(), PDO::PARAM_STR);
+                $stmt->bindValue(':HORA_EXPIRAR_COM', $comunicacao->getHora_expirar_com(), PDO::PARAM_STR);
+                $stmt->bindValue(':DATA_EXPIRAR_COM', $comunicacao->getData_expirar_com(), PDO::PARAM_STR);
                 $stmt->bindValue(':ID_LOGIN_COM', $comunicacao->getId_login_com(), PDO::PARAM_INT);
                 $stmt->bindValue(':ID_TIPO_COM', $comunicacao->getId_tipo_com(), PDO::PARAM_INT);
                 $stmt->bindValue(':ID_NIVEL_PRIORIDADE_COM', $comunicacao->getId_nivel_prioridade_com(), PDO::PARAM_INT);
@@ -136,20 +142,22 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
                 $success = $stmt->execute();
             }
 
-            if ($success) {
 
-                //CRIAR HASH AUTOMATICAMENTE
-                $table = 'COMUNICACAO';
-                $field_set = 'PRIVATE_KEY_COMUNICACAO';
-                $field_eguals = 'ID_COMUNICACAO';
-                $key = $this->conexao->lastInsertId();
-                $keyHash = password_hash($key, PASSWORD_BCRYPT);
+            $comunicacao->setId_comunicacao($this->conexao->lastInsertId());
+            //CRIAR HASH AUTOMATICAMENTE
+            $table = 'COMUNICACAO';
+            $field_set = 'PRIVATE_KEY_COMUNICACAO';
+            $field_eguals = 'ID_COMUNICACAO';
+            $key = $this->conexao->lastInsertId();
+            $keyHash = password_hash($key, PASSWORD_BCRYPT);
 
-                $repositorioGeneretor = new PdoRepositorioGeneretor(Persistencia\CriadorConexao::criarConexao());
-                $repositorioGeneretor->generatorPrivateKeyHash($table, $field_set, $field_eguals, $key, $keyHash);
-            }
+            $repositorioGeneretor = new PdoRepositorioGeneretor(Persistencia\CriadorConexao::criarConexao());
+            $repositorioGeneretor->generatorPrivateKeyHash($table, $field_set, $field_eguals, $key, $keyHash);
 
-            return $success;
+            $inf[] = array(
+                "RESULT" => "TRUE",
+                "HASH_ID" => $this->conexao->lastInsertId());
+            return $inf;
         } catch (Exception $exc) {
             echo $exc->getTraceAsString() . ' Falha ao criar comunicacao';
         }
@@ -180,7 +188,7 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
         return $this->hidrataComunicacao($stmt);
     }
 
-    public function updateComunicacao(comunicacao $comunicacao): bool {
+    public function updateComunicacao(comunicacao $comunicacao): array {
         $slqUpdate = "UPDATE comunicacao SET TITULO_COM = :tit, MENSAGEM_COM = :msn, HORA_CRIACAO_COM = :hor_cr,"
                 . "DATA_CRIACAO_COM = :dat_cr, HORA_EXPIRAR_COM = :hor_exp, DATA_EXPIRAR_COM = :data_exp WHERE  CODIGO_COM = :cod AND PRIVATE_KEY_COMUNICACAO = :keyHash;";
         $stmt = $this->conexao->prepare($slqUpdate);
@@ -193,7 +201,10 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
         $stmt->bindValue(':cod', $comunicacao->getCodigo_comunicacao(), PDO::PARAM_INT);
         $stmt->bindValue(':keyHash', $comunicacao->getPrivate_key_comunicacao(), PDO::PARAM_STR);
 
-        return $stmt->execute();
+        $inf[] = array(
+            'RESULT' => 'TRUE'
+        );
+        return $inf;
     }
 
     public function hidrataComunicacao(\PDOStatement $stmt): array {
@@ -227,7 +238,8 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
                 "DESCRICAO" => $dadosComunicao->DESCRICAO,
                 "HASH_COMUNICACAO" => $dadosComunicao->HASH_COMUNICACAO,
                 "HASH_ID" => $dadosComunicao->HASH_ID,
-                "HASH_ID_VAGAS" => $dadosComunicao->HASH_ID_VAGAS
+                "HASH_ID_VAGAS" => $dadosComunicao->HASH_ID_VAGAS,
+                "URL" => $dadosComunicao->URL
             );
         }
         return $inf;
@@ -261,26 +273,30 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
 
         $sqlAlertaComunicacao = 'SELECT 
                                     C.MENSAGEM_COM MSN,
+                                    C.TITULO_COM ASSUNTO,
                                     S.DESC_SETOR SETOR,
                                     C.DATA_CRIACAO_COM D_CRIADO,
                                     C.HORA_CRIACAO_COM H_CRIADO,
                                     C.ID_STATUS_COM STATUS_C,
                                     C.CODIGO_COM COD,
-                                    C.ID_TIPO_COM TIPO_COMUNICACAO
+                                    C.ID_TIPO_COM TIPO_COMUNICACAO,
+                                    C.ID_COMUNICACAO HASH_ID,
+                                    C.PRIVATE_KEY_COMUNICACAO HASH_COMUNICACAO,
+                                    a.URL_ANEXO URL_ARQUIVO
                                     FROM COMUNICACAO C 
                                     INNER JOIN LOGIN L ON L.ID_LOGIN = C.ID_LOGIN_COM
                                     INNER JOIN USUARIO U ON U.id_usuario = L.ID_USUARIO_LOGIN
                                     INNER JOIN SETOR S ON S.ID_SETOR = U.id_setor_usuario
-                                    WHERE C.ID_STATUS_COM = 1';
+                                    LEFT JOIN ANEXO A ON A.ID_ANEXO = C.ID_ANEXO_COM
+                                    WHERE C.ID_STATUS_COM = 1 AND MENSAGEM_COM IS NOT NULL';
         $stmt = $this->conexao->query($sqlAlertaComunicacao);
         $stmt->execute();
-        if($stmt->rowCount() > 0){
+        if ($stmt->rowCount() > 0) {
             return $this->hidrataAlertaComunicacao($stmt);
-        }else{
+        } else {
             $inf[] = array('RESULT' => 'FALSE');
-             return $inf;
+            return $inf;
         }
-        
     }
 
     public function hidrataAlertaComunicacao(\PDOStatement $stmt) {
@@ -289,16 +305,30 @@ class PdoRepositorioComunicacao implements RepositorioComunicacao {
         foreach ($listarAlertaComunicacao as $dadosAletaComunicacao) {
             $inf[] = array(
                 "RESULT" => "TRUE",
-                "MSN" => $dadosAletaComunicacao->MSN,
-                "SETOR" => $dadosAletaComunicacao->SETOR,
+                "ASSUNTO" => $dadosAletaComunicacao->ASSUNTO,
+                "MSN" => $dadosAletaComunicacao->MSN, //substr($dadosAletaComunicacao->MSN, 0, 64),
+                "SETOR" => strtolower($dadosAletaComunicacao->SETOR),
                 "D_CRIADO" => $dadosAletaComunicacao->D_CRIADO,
                 "H_CRIADO" => $dadosAletaComunicacao->H_CRIADO,
                 "STATUS_C" => $dadosAletaComunicacao->STATUS_C,
                 "TIPO_COMUNICACAO" => $dadosAletaComunicacao->TIPO_COMUNICACAO,
-                "COD" => $dadosAletaComunicacao->COD
+                "COD" => $dadosAletaComunicacao->COD,
+                "HASH_ID" => $dadosAletaComunicacao->HASH_ID,
+                "HASH_COMUNICACAO" => $dadosAletaComunicacao->HASH_COMUNICACAO,
+                "URL_ARQUIVO" => $dadosAletaComunicacao->URL_ARQUIVO,
             );
         }
         return $inf;
+    }
+
+    public function updateComunicacaoAnexo(comunicacao $comunicacao): bool {
+
+        $slqUpdate = "UPDATE comunicacao SET ID_ANEXO_COM = :hashId WHERE ID_COMUNICACAO = :idCm;";
+        $stmt = $this->conexao->prepare($slqUpdate);
+        $stmt->bindValue(':idCm', $comunicacao->getId_comunicacao(), \PDO::PARAM_INT);
+        $stmt->bindValue(':hashId', $comunicacao->getId_anexo_com(), \PDO::PARAM_INT);
+
+        return $stmt->execute();
     }
 
 }

@@ -6,6 +6,7 @@
  */
 
 namespace Rubens\Comercial\Infraestrutura\Repositorio;
+
 use Rubens\Comercial\Model\usuario;
 use Rubens\Comercial\Dominio\Repositorio\RepositorioUsuario;
 use Rubens\Comercial\Infraestrutura\Persistencia;
@@ -16,10 +17,11 @@ use PDO;
  *
  * @author Rubens
  */
-class PdoRepositorioUsuario  implements RepositorioUsuario{
+class PdoRepositorioUsuario implements RepositorioUsuario {
+
     //put your code here
     private PDO $conexao;
-    
+
     public function __construct(PDO $conexao) {
         $this->conexao = $conexao;
     }
@@ -33,8 +35,8 @@ class PdoRepositorioUsuario  implements RepositorioUsuario{
         $stmt->bindValue(':id_setor', $usuario->getId_setor_usuario(), \PDO::PARAM_INT);
         $stmt->bindValue(':priv_key_usu', $usuario->getPrivate_key_usuario(), \PDO::PARAM_STR);
         $success = $stmt->execute();
-        if($success){
-            
+        if ($success) {
+
             //CRIAR HASH AUTOMATICAMENTE
             $table = 'USUARIO';
             $field_set = 'PRIVATE_KEY_USUARIO';
@@ -46,7 +48,6 @@ class PdoRepositorioUsuario  implements RepositorioUsuario{
             $repositorioGeneretor->generatorPrivateKeyHash($table, $field_set, $field_eguals, $key, $keyHash);
         }
         return $success;
-        
     }
 
     public function deleteUsuario(usuario $usuario): bool {
@@ -54,18 +55,22 @@ class PdoRepositorioUsuario  implements RepositorioUsuario{
     }
 
     public function readUsuario(usuario $usuario): array {
-        
+        $sqlQuery = 'SELECT U.ID_USUARIO, U.NOME_USUARIO NOME, U.PRIVATE_KEY_USUARIO HASH_USUARIO FROM USUARIO U WHERE U.PRIVATE_KEY_USUARIO = :hashID;';
+        $stmt = $this->conexao->prepare($sqlQuery);
+        $stmt->bindValue(':hashID', $usuario->getPrivate_key_usuario(), PDO::PARAM_INT);
+        $stmt->execute();
+        return $this->listaUsuarios($stmt);
     }
 
     public function salvarUsuario(usuario $usuario): bool {
-        if($usuario->getId_usuario() === null){
+        if ($usuario->getId_usuario() === null) {
             return $this->createUsuario($usuario);
         }
         return $this->updateUsuario($usuario);
     }
 
     public function todosUsuario(): array {
-        $sqlQuery = 'SELECT U.NOME_USUARIO NOME, U.PRIVATE_KEY_USUARIO HASH_USUARIO FROM USUARIO U;';
+        $sqlQuery = 'SELECT U.ID_USUARIO, U.NOME_USUARIO NOME, U.PRIVATE_KEY_USUARIO HASH_USUARIO FROM USUARIO U;';
         $stmt = $this->conexao->query($sqlQuery);
         return $this->listaUsuarios($stmt);
     }
@@ -80,7 +85,7 @@ class PdoRepositorioUsuario  implements RepositorioUsuario{
         $stmt->bindValue(':id_setor', $usuario->getId_setor_usuario(), \PDO::PARAM_INT);
         $stmt->bindValue(':priv_key_usuario', $usuario->getPrivate_key_usuario(), \PDO::PARAM_STR);
         $success = $stmt->execute();
-        if($success){
+        if ($success) {
             $this->conexao->lastInsertId();
         }
         return $success;
@@ -88,12 +93,13 @@ class PdoRepositorioUsuario  implements RepositorioUsuario{
 
     public function listaUsuarios(\PDOStatement $stmt) {
         $listaDadosUsuario = $stmt->fetchAll(\PDO::FETCH_OBJ);
-        
-        foreach ($listaDadosUsuario as $dados){
-            $inf[]= array(
+
+        foreach ($listaDadosUsuario as $dados) {
+            $inf [] = array(
+                "HASH_ID" => $dados->ID_USUARIO,
                 "NOME" => $dados->NOME,
                 "HASH_USUARIO" => $dados->HASH_USUARIO
-                    );
+            );
         }
         return $inf;
     }

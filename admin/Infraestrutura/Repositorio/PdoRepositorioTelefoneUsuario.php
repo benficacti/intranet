@@ -28,10 +28,11 @@ class PdoRepositorioTelefoneUsuario implements RepositorioTelefoneUsuario {
     }
 
     public function createTelefoneUsuario(telefoneUsuario $telUsuario): bool {
-        $sqlInsert = 'INSERT INTO TELEFONE_USUARIO (ID_TELEFONE, ID_STATUS_VISUALIZACAO, ID_NOME_AGENDA)'
-                . 'VALUES(:id_tel, :id_status_vis, :id_nome);';
+        $sqlInsert = 'INSERT INTO TELEFONE_USUARIO (ID_TELEFONE, ID_TELEFONE_RAMAL, ID_STATUS_VISUALIZACAO, ID_NOME_AGENDA)'
+                . 'VALUES(:id_tel, :id_tel_ramal, :id_status_vis, :id_nome);';
         $stmt = $this->conexao->prepare($sqlInsert);
         $stmt->bindValue(':id_tel', $telUsuario->getId_telefone(), \PDO::PARAM_INT);
+        $stmt->bindValue(':id_tel_ramal', $telUsuario->getId_telefone_ramal(), \PDO::PARAM_STR);
         $stmt->bindValue(':id_status_vis', $telUsuario->getId_status_visualizacao(), \PDO::PARAM_INT);
         $stmt->bindValue(':id_nome', $telUsuario->getId_nome_agenda(), \PDO::PARAM_INT);
         $success = $stmt->execute();
@@ -42,8 +43,12 @@ class PdoRepositorioTelefoneUsuario implements RepositorioTelefoneUsuario {
     }
 
     public function readTelefoneUsuario(telefoneUsuario $telUsuario): array {
-
-        $sqlTelefoneUsuario = 'SELECT * FROM TELEFONE_USUARIO WHERE ID_TELEFONE = "' . $telUsuario->getId_telefone() . '" AND ID_NOME_AGENDA ="' . $telUsuario->getId_nome_agenda() . '"';
+        $sqlTelefoneUsuario = '';
+        if ($telUsuario->getId_telefone() != null) {
+            $sqlTelefoneUsuario = 'SELECT * FROM TELEFONE_USUARIO WHERE ID_TELEFONE = "' . $telUsuario->getId_telefone() . '" AND ID_NOME_AGENDA ="' . $telUsuario->getId_nome_agenda() . '"';
+        } else if ($telUsuario->getId_telefone_ramal() != null) {
+            $sqlTelefoneUsuario = 'SELECT * FROM TELEFONE_USUARIO WHERE ID_TELEFONE_RAMAL = "' . $telUsuario->getId_telefone_ramal() . '" AND ID_NOME_AGENDA ="' . $telUsuario->getId_nome_agenda() . '"';
+        }
         $stmt = $this->conexao->query($sqlTelefoneUsuario);
         $stmt->execute();
 

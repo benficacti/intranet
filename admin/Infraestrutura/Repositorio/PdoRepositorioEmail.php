@@ -56,7 +56,7 @@ class PdoRepositorioEmail implements RepositorioEmail {
 
         if ($sucesso) {
             $email->setId_email($this->conexao->lastInsertId());
-            
+
             //CRIAR HASH AUTOMATICAMENTE
             $table = 'EMAIL';
             $field_set = 'PRIVATE_KEY_EMAIL';
@@ -67,17 +67,17 @@ class PdoRepositorioEmail implements RepositorioEmail {
             $repositorioGeneretor = new PdoRepositorioGeneretor(Persistencia\CriadorConexao::criarConexao());
             $repositorioGeneretor->generatorPrivateKeyHash($table, $field_set, $field_eguals, $key, $keyHash);
         }
-        
+
         return $sucesso;
     }
-    
+
     public function updateEmail(email $email): bool {
         $sqlUpdate = "UPDATE EMAIL SET ENDERECO = :nome, PRIVATE_KEY_EMAIL = :PRIVATE_KEY_EMAIL WHERE id_email = :id;";
         $stmt = $this->conexao->prepare($sqlUpdate);
         $stmt->bindValue(':nome', $email->getEndereco(), PDO::PARAM_STR);
         $stmt->bindValue(':PRIVATE_KEY_EMAIL', $email->getPrivate_email(), PDO::PARAM_STR);
         $stmt->bindValue(':id', $email->getId_email(), PDO::PARAM_INT);
-        
+
         return $stmt->execute();
     }
 
@@ -112,12 +112,23 @@ class PdoRepositorioEmail implements RepositorioEmail {
     }
 
     public function readEmailSearch(email $email): array {
-        
+
         $sqlConsultaEmails = "SELECT * FROM EMAIL  WHERE ENDERECO LIKE :descEmail";
         $stmt = $this->conexao->prepare($sqlConsultaEmails);
-        $stmt->bindValue(':descEmail', "%".$email->getEndereco()."%", \PDO::PARAM_STR);
+        $stmt->bindValue(':descEmail', "%" . $email->getEndereco() . "%", \PDO::PARAM_STR);
         $stmt->execute();
-        
+
+        return $this->hidratarListaEmail($stmt);
+    }
+
+    public function readHashEmailSearch(email $email): array {
+
+
+        $sqlConsultaEmails = "SELECT * FROM EMAIL  WHERE PRIVATE_KEY_EMAIL = :hashEmail";
+        $stmt = $this->conexao->prepare($sqlConsultaEmails);
+        $stmt->bindValue(':hashEmail',$email->getPrivate_email(), \PDO::PARAM_STR);
+        $stmt->execute();
+
         return $this->hidratarListaEmail($stmt);
     }
 
