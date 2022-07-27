@@ -183,13 +183,7 @@
                         },
                         {
                             field: 'TIPO_TELEFONE',
-                            title: '<i class="fad fa-bars"></i> TIPO TELEFONE',
-                            sortable: true,
-                            search: true
-                        },
-                        {
-                            field: 'OPERADORA',
-                            title: '<i class="fas fa-list-alt"></i> OPERADORA',
+                            title: '<i class="fad fa-bars"></i> TIPO',
                             sortable: true,
                             search: true
                         },
@@ -236,7 +230,6 @@
                                     TEL: '<label class="class_nome"><i class="fad fa-phone-office"></i></label> ' + val.TELEFONE,
                                     GAR: '<label class="class_nome"><i class="fad fa-garage"></i></label> ' + val.GARAGEM,
                                     TIPO_TELEFONE: '<i class="fad fa-bars"></i></label> ' + val.TIPO_TELEFONE,
-                                    OPERADORA: '<i class="fas fa-list-alt"></i> ' + val.OPERADORA,
                                     SETOR: '<label class="class_nome"><i class="fad fa-list"></i></label>' + setor
 
                                 });

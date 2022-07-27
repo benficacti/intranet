@@ -1,6 +1,7 @@
 <?php
 
 require_once './autoload.php';
+session_start();
 
 use Rubens\Comercial\Infraestrutura\Persistencia\CriadorConexao;
 //TELEFONE
@@ -99,6 +100,24 @@ use Rubens\Comercial\Model\tipoComunicacao;
 
 $repositorio_tipo_comunicacao = new PdoRepositorioTipoComunicacao(CriadorConexao::criarConexao());
 
+//TIPO_SOLICITACAO
+use Rubens\Comercial\Infraestrutura\Repositorio\PdoRepositorioTipoSolicitacao;
+use Rubens\Comercial\Model\tipoSolicitacao;
+
+$repositorio_tipo_solicitacao = new PdoRepositorioTipoSolicitacao(CriadorConexao::criarConexao());
+
+//SOLICITACAO_MARKETING
+use Rubens\Comercial\Infraestrutura\Repositorio\PdoRepositorioSolicitacaoMarketing;
+use Rubens\Comercial\Model\solicitacaoMarketing;
+
+$repositorio_solicitacao = new PdoRepositorioSolicitacaoMarketing(CriadorConexao::criarConexao());
+
+//DETALHE
+use Rubens\Comercial\Infraestrutura\Repositorio\PdoRepositorioDetalheSolicitacao;
+use Rubens\Comercial\Model\detalheSolicitacao;
+
+$repositorio_detalhe_solicitacao = new PdoRepositorioDetalheSolicitacao(CriadorConexao::criarConexao());
+
 date_default_timezone_set('America/Fortaleza');
 $post = file_get_contents('php://input');
 /* CONNECTIONS */
@@ -183,9 +202,24 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
                     } else {
                         $info = $repositorio_tipo_vaga->readTipoVaga($tipoVaga);
                     }
-
+                    break;
+                case "search_alerta_solicitacao":
+                    $info = $repositorio_solicitacao->readAlertSolicitacaoMk();
+                    break;
+                case "solicitacao_detalhado":
+                    $solicitacaoMk = new solicitacaoMarketing(null, null, null, null, null, null, null, null, null, null, $json->hash_id, null);
+                    $info = $repositorio_solicitacao->readSolicitacaoMk($solicitacaoMk);
+                    break;
+                case "cadastrar_vaga":
+                    $tipoVaga = new tipoVaga(null, $json->vaga);
+                    $info[] = ($repositorio_tipo_vaga->salvarTipoVaga($tipoVaga)) ? array('RESULT' => 'TRUE') : array('RESULT' => 'FALSE');
+                    break;
+                case "update_vaga":
+                    $tipoVaga = new tipoVaga($json->hash_id_vaga, $json->vaga);
+                    $info[] = ($repositorio_tipo_vaga->updateTipoVaga($tipoVaga)) ? array('RESULT' => 'TRUE') : array('RESULT' => 'FALSE');
                     break;
                 case "publicar_vaga":
+
                     $vagas = new vagasEmprego(null, $json->periodo, $json->setor, $json->vaga, $json->descricao, null);
 
                     $vagas_emprego = $repositorio_vagas_emprego->salvarVagasEmprego($vagas);
@@ -196,7 +230,7 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
 
                     $titulo_com = 'VAGAS DE EMPREGO';
                     $mensagem_com = null;
-                    $id_login_com = null;
+                    $id_login_com = $_SESSION['id_login'];
                     $id_tipo_com = 1; //VAGAS DE EMPREGO
                     $id_nivel_prioridade_com = 1; //BAIXA (NÃO CRIAR POP UP)
                     $id_status_com = 1; //ATIVO
@@ -229,15 +263,69 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
                     }
                     break;
                 case "search_tipo_comunicado":
-                    $info = $repositorio_tipo_comunicacao->todosTiposComunicacao();
+                    $tipoComunicacao = new tipoComunicacao($json->setor, null);
+                    $info = $repositorio_tipo_comunicacao->readTiposComunicacao($tipoComunicacao);
+                    break;
+                case "search_tipo_solicitacao":
+                    $info = $repositorio_tipo_solicitacao->todosTiposSolicitacao();
+                    break;
+                case "alter_state_solicitacao":
+                    $solitacaoMk = new solicitacaoMarketing(null, null,
+                            null, null, null,
+                            null, null, null,
+                            null, $json->status, $json->token, null);
+                    $info[] = ($repositorio_solicitacao->updateRetornoSolicitacaoMk($solitacaoMk)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
+                    break;
+                case "registrar_solicitacao":
+                    $id_telefone = null;
+                    $id_tipo = null;
+                    $id_email = null;
+                    $id_detalhe = null;
+
+                    $email = new email(null, null, $json->email);
+                    foreach ($repositorio_email->readHashEmailSearch($email) as $key => $value) {
+                        $id_email = $value['ID'];
+                        $_SESSION['email_solicitante'] = $value['ENDERECO'];
+                    }
+
+
+                    $ramal = new telefone(null, $json->telefone, null, null, null, null, null, null);
+                    foreach ($repositorio_telefone->readSearchRamal($ramal) as $key => $value) {
+                        if ($value['RESULT'] == 'TRUE') {
+                            $id_telefone = $value['ID_TELEFONE'];
+                        }
+                    }
+
+
+                    $tipoSolicitacao = new tipoSolicitacao(null, $json->tipo);
+                    foreach ($repositorio_tipo_solicitacao->readIdTiposSolicitacao($tipoSolicitacao) as $key => $value) {
+                        $id_tipo = $value['HASH_ID'];
+                    }
+
+                    $detalheSolicitacao = new detalheSolicitacao(null, $json->detalhe, null);
+
+                    foreach ($repositorio_detalhe_solicitacao->salvarDetalheSolicitacao($detalheSolicitacao) as $key => $value) {
+                        $id_detalhe = $value['ID_SOL'];
+                    }
+
+
+                    /*
+                      $solitacaoMk = new solicitacaoMarketing(null, $json->nome,
+                      $id_telefone, $id_email, null,
+                      $id_detalhe, $id_tipo, null, null);
+                     */
+                    $solitacaoMk = new solicitacaoMarketing(null, $json->nome, $id_telefone, $id_email,
+                            null, null, $id_detalhe, $id_tipo,
+                            $json->setor, null, null, null);
+                    $info = $repositorio_solicitacao->salvarSolicitacaoMk($solitacaoMk);
                     break;
                 case "publicar_noticia":
                     $id_nivel_prioridade_com = 1; //BAIXA (NÃO CRIAR POP UP)
                     $id_anexo_com = null;
                     $id_status_com = 1; //ATIVA
-                    $id_login_com = 3;
-                    $comunicacao = new comunicacao(null, null, $json->descricao, null, null, $json->hora_expirar, $json->data_expirar, $id_login_com, $json->tipo_noticia, $id_nivel_prioridade_com, null, null, $id_anexo_com, 1, $id_status_com, null, null, null);
-                    $info[] = ($repositorio_comunicacao->salvar($comunicacao)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
+                    $id_login_com = $_SESSION['id_login'];
+                    $comunicacao = new comunicacao(null, $json->assunto, $json->descricao, null, null, $json->hora_expirar, $json->data_expirar, $id_login_com, $json->tipo_noticia, $id_nivel_prioridade_com, null, null, $id_anexo_com, 1, $id_status_com, null, null, null);
+                    $info = $repositorio_comunicacao->salvar($comunicacao);
                     break;
                 case "search_empresa":
                     $info = $repositorio_empresa->todosEmpresa();
@@ -301,7 +389,29 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
                     $info [] = ($repositorio_telefone->salvarTelefone($telefone)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
                     break;
                 case "search_telefone":
-                    $info = $repositorio_telefone->listarNaoAssociadosTelefone();
+                    $telefone = new telefone(null, $json->tel, null, null, null, null, null, null);
+                    if ($telefone->getNum_telefone() == null) {
+                        $info = $repositorio_telefone->listarNaoAssociadosTelefone();
+                    } else {
+                        $info = $repositorio_telefone->readTelefone($telefone);
+                    }
+
+                    break;
+
+                case "search_ramal":
+                    $telefone = new telefone(null, $json->tel, null, null, null, null, null, null);
+                    if ($telefone->getNum_telefone() == null) {
+                        $info = $repositorio_telefone->listarNaoAssociadosTelefone();
+                    } else {
+                        $info = $repositorio_telefone->readSearchRamal($telefone);
+                    }
+
+                    break;
+
+                case "search_token":
+                    $solicitacaoMk = new solicitacaoMarketing(null, null, null, null, null, null, null, null, null, null, $json->token, null);
+                    $info = $repositorio_solicitacao->readSolicitacaoMk($solicitacaoMk);
+
                     break;
                 case "search_email":
                     $email = new email(null, $json->email, null);
@@ -310,6 +420,9 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
                     } else {
                         $info = $repositorio_email->readEmailSearch($email);
                     }
+                    break;
+                case "teste_api":
+                    $info = array("HUAUA" => "sasdsdasd");
                     break;
                 case "register_agenda":
 
@@ -349,7 +462,7 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
 
 
                         $email = new email(null, null, $json->email);
-                        foreach ($repositorio_email->readEmailSearch($email) as $key => $value) {
+                        foreach ($repositorio_email->readHashEmailSearch($email) as $key => $value) {
                             $id_email = $value['ID'];
                         }
 
@@ -362,7 +475,15 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
                         }
 
 
-                        $telUsuario = new telefoneUsuario(null, $id_telefone, $json->status_agenda, $id_nome_agenda);
+                        $ramal = new telefone(null, $json->ramal, null, null, null, null, null, null);
+                        foreach ($repositorio_telefone->readSearchRamal($ramal) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone_ramal = $value['ID_TELEFONE'];
+                            }
+                        }
+
+
+                        $telUsuario = new telefoneUsuario(null, $id_telefone, $id_telefone_ramal, $json->status_agenda, $id_nome_agenda);
                         $repositorio_telefone_usuario->salvarTelefoneUsuario($telUsuario);
                         foreach ($repositorio_telefone_usuario->readTelefoneUsuario($telUsuario) as $key => $value) {
                             if ($value['RESULT'] == 'TRUE') {
@@ -373,8 +494,124 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
 
 
                         //$agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, $id_email, null);
-                        $agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, $id_email, $id_setor, $id_telefone_usuario);
-                        $info = ($repositorio_agenda->salvarAgenda($agenda)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
+                        $agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, $id_email, $id_setor, null);
+                        $info[] = ($repositorio_agenda->salvarAgenda($agenda)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
+                    }
+                    //VERIFICAR SE EXISTEM APENAS TELEFONE
+                    else
+                    if (!empty($json->telefone) and empty($json->email) and empty($json->ramal)) {
+
+                        $telefone = new telefone(null, null, null, null, null, null, null, $json->telefone);
+                        foreach ($repositorio_telefone->readSearchTelefone($telefone) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone = $value['ID_TELEFONE'];
+                            }
+                        }
+
+
+                        $telUsuario = new telefoneUsuario(null, $id_telefone, null, $json->status_agenda, $id_nome_agenda);
+                        $repositorio_telefone_usuario->salvarTelefoneUsuario($telUsuario);
+                        foreach ($repositorio_telefone_usuario->readTelefoneUsuario($telUsuario) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone_usuario = $value['ID_TELEFONE_USUARIO'];
+                            }
+                        }
+
+
+
+                        //$agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, $id_email, null);
+                        $agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, null, $id_setor, null);
+                        $info[] = ($repositorio_agenda->salvarAgenda($agenda)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
+                    }
+                    //VERIFICAR SE EXISTEM APENAS RAMAl
+                    else
+                    if (!empty($json->ramal) and empty($json->telefone) and empty($json->email)) {
+
+
+                        $ramal = new telefone(null, $json->ramal, null, null, null, null, null, null);
+                        foreach ($repositorio_telefone->readSearchRamal($ramal) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone_ramal = $value['ID_TELEFONE'];
+                            }
+                        }
+
+
+                        $telUsuario = new telefoneUsuario(null, null, $id_telefone_ramal, $json->status_agenda, $id_nome_agenda);
+                        $repositorio_telefone_usuario->salvarTelefoneUsuario($telUsuario);
+                        foreach ($repositorio_telefone_usuario->readTelefoneUsuario($telUsuario) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone_usuario = $value['ID_TELEFONE_USUARIO'];
+                            }
+                        }
+
+
+
+                        //$agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, $id_email, null);
+                        $agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, null, $id_setor, null);
+                        $info[] = ($repositorio_agenda->salvarAgenda($agenda)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
+                    }
+                    //VERIFICAR SE RAMAL E EMAIL EXISTEM
+                    else
+                    if (!empty($json->ramal) and empty($json->telefone) and!empty($json->email)) {
+
+                        $email = new email(null, null, $json->email);
+                        foreach ($repositorio_email->readHashEmailSearch($email) as $key => $value) {
+                            $id_email = $value['ID'];
+                        }
+
+
+                        $ramal = new telefone(null, $json->ramal, null, null, null, null, null, null);
+                        foreach ($repositorio_telefone->readSearchRamal($ramal) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone_ramal = $value['ID_TELEFONE'];
+                            }
+                        }
+
+
+                        $telUsuario = new telefoneUsuario(null, null, $id_telefone_ramal, $json->status_agenda, $id_nome_agenda);
+                        $repositorio_telefone_usuario->salvarTelefoneUsuario($telUsuario);
+                        foreach ($repositorio_telefone_usuario->readTelefoneUsuario($telUsuario) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone_usuario = $value['ID_TELEFONE_USUARIO'];
+                            }
+                        }
+
+
+
+                        //$agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, $id_email, null);
+                        $agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, $id_email, $id_setor, null);
+                        $info[] = ($repositorio_agenda->salvarAgenda($agenda)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
+                    } else
+                    if (!empty($json->ramal) and!empty($json->telefone)) {
+
+                        $telefone = new telefone(null, null, null, null, null, null, null, $json->telefone);
+                        foreach ($repositorio_telefone->readSearchTelefone($telefone) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone = $value['ID_TELEFONE'];
+                            }
+                        }
+
+                        $ramal = new telefone(null, $json->ramal, null, null, null, null, null, null);
+                        foreach ($repositorio_telefone->readSearchRamal($ramal) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone_ramal = $value['ID_TELEFONE'];
+                            }
+                        }
+
+
+                        $telUsuario = new telefoneUsuario(null, $id_telefone, $id_telefone_ramal, $json->status_agenda, $id_nome_agenda);
+                        $repositorio_telefone_usuario->salvarTelefoneUsuario($telUsuario);
+                        foreach ($repositorio_telefone_usuario->readTelefoneUsuario($telUsuario) as $key => $value) {
+                            if ($value['RESULT'] == 'TRUE') {
+                                $id_telefone_usuario = $value['ID_TELEFONE_USUARIO'];
+                            }
+                        }
+
+
+
+                        //$agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, $id_email, null);
+                        $agenda = new agenda(null, $id_telefone_usuario, $id_nome_agenda, $json->status_agenda, null, $id_setor, null);
+                        $info[] = ($repositorio_agenda->salvarAgenda($agenda)) ? array("RESULT" => "TRUE") : array("RESULT" => "FALSE");
                     } else {
                         $info[] = array("RESULT" => "TRUE");
                     }
@@ -383,6 +620,16 @@ if (strlen($json_params) > 0 && isValidJSON($json_params)) {
                     break;
 
                 case "mostrar_telefone_associado":
+                    $nome_agenda = new nome_agenda(null, $json->nome, null);
+                    foreach ($repositorio_nome_agenda->readNomeAgenda($nome_agenda) as $key => $value) {
+                        if ($value['RESULT'] == 'TRUE') {
+                            $id_nome_agenda = $value['ID_NOME_AGENDA'];
+                        }
+                    }
+                    $agenda = new agenda(null, null, $id_nome_agenda, null, null, null, null);
+                    $info = $repositorio_agenda->readAgenda($agenda);
+                    break;
+                case "mostrar_ramal_associado":
                     $nome_agenda = new nome_agenda(null, $json->nome, null);
                     foreach ($repositorio_nome_agenda->readNomeAgenda($nome_agenda) as $key => $value) {
                         if ($value['RESULT'] == 'TRUE') {

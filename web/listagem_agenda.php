@@ -30,12 +30,12 @@
 
                     <div class="painel_listagem_email">
                         <div class="col-md-11 text-center" style="margin:0 auto; height:30px; margin-top: 2vh;">
-                            <label class="title_cartoes_pendentes text-title-table class_title">AGENDA</label>
+                            <label class="title_cartoes_pendentes text-title-table class_title">CONTATOS</label>
                         </div>
                         <div class="col-md-11" style="margin:0 auto;">
                             <div class="col-md-12 text-left" style=" background-color:#0069D9;
                                  color:white; height:40px; border-top-right-radius: 8px; border-top-left-radius: 8px">
-                                <label class="title_cartoes_pendentes text-consulta-table">LISTAR AGENDA: </label>
+                                <label class="title_cartoes_pendentes text-consulta-table">BUSCAR AGENDA: </label>
                                 <input type="text" name="cpf_cadastro" class="text-input-table class_tr" id="doc" placeholder="" onkeyup="loadingData()">
 
                             </div>
@@ -186,6 +186,11 @@
                             sortable: true
                         },
                         {
+                            field: 'NUM_RAMAL',
+                            title: '<i class="fad fa-user"></i> RAMAL',
+                            sortable: true
+                        },
+                        {
                             field: 'D_SETOR',
                             title: '<i class="fad fa-user"></i> SETOR',
                             sortable: true
@@ -213,13 +218,39 @@
                     },
                     success: function (data) {
                         console.log(data)
+                        var email = '';
+                        var ramal = '';
+                        var tel = '';
+                        var setor = '';
                         $.each(JSON.parse(data), function (key, val) {
+                            if (val.ENDER_EMAIL == null) {
+                                email = ' ---';
+                            } else {
+                                email = val.ENDER_EMAIL;
+                            }
+                            if (val.NUM_RAMAL == null) {
+                                ramal = ' ---';
+                            } else {
+                                ramal = val.NUM_RAMAL;
+                            }
+                            if (val.NUM_TELEFONE == null) {
+                                tel = ' ---';
+                            } else {
+                                tel = val.NUM_TELEFONE;
+                            }
+                            if (val.D_SETOR == null) {
+                                setor = ' ---';
+                            } else {
+                                setor = val.D_SETOR;
+                            }
                             if (val.RESULT == "TRUE") {
+
                                 dado.push({
-                                    NOME_FUNC: '<label class="class_nome"><i class="fad fa-user"></i></label>' + val.NOME_FUNC,
-                                    ENDER_EMAIL: '<label class="class_nome"><i class="fad fa-user"></i></label>' + val.ENDER_EMAIL,
-                                    NUM_TELEFONE: '<label class="class_nome"><i class="fad fa-user"></i></label>' + val.NUM_TELEFONE,
-                                    D_SETOR: '<label class="class_nome"><i class="fad fa-user"></i></label>' + val.D_SETOR
+                                    NOME_FUNC: '<label class="class_nome"><i class="fad fa-user"></i></label> ' + val.NOME_FUNC,
+                                    ENDER_EMAIL: '<label class="class_nome"><i class="fad fa-user"></i></label> ' + email,
+                                    NUM_TELEFONE: '<label class="class_nome"><i class="fad fa-user"></i></label> ' + tel,
+                                    NUM_RAMAL: '<label class="class_nome"><i class="fad fa-user"></i></label> ' + ramal,
+                                    D_SETOR: '<label class="class_nome"><i class="fad fa-user"></i></label> ' + setor
 
                                 });
                             } else {
@@ -243,9 +274,9 @@
                 })
                 //$("tr").addClass("bar_top")
             });
-            
-            
-            
+
+
+
             function modulo_rh() {
                 var user = document.getElementById('user').value;
                 var password = document.getElementById('password').value;
@@ -258,8 +289,8 @@
                         password: password
 
                     }, success: function (data) {
-                        
-                        
+
+
                         var obj = JSON.parse(data);
                         obj.forEach(function (name, value) {
                             if (name.RESULT === 'TRUE') {
@@ -269,8 +300,8 @@
                                 document.getElementById('id_auth').innerHTML = res;
                             }
                         });
-                        
-                        
+
+
                     }
                 });
 

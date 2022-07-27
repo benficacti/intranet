@@ -104,7 +104,7 @@ session_destroy();
 
             .text-azul-marinho {
                 color: #0e1a35;
-                font-size: 15px
+                font-size: 17px
             }
 
             .class_fonts{
@@ -113,9 +113,30 @@ session_destroy();
             }
 
             .class_fonts_style{
-                font-size: 14px;
-                color: #5A5A5A;
+                font-size: 15px;
+                color: #212529;
                 line-height: 1
+            }
+
+            .class_fonts_style_span{
+                font-size: 11px;
+                color: #000000 !important;
+                line-height: 1;
+                font-weight: bold;
+            }
+            .class_fonts_style_span_2{
+                font-size: 12px;
+                color: #000000 !important;
+                line-height: 1;
+                font-weight: bold;
+            }
+
+            .class_pointer{
+                cursor: pointer !important;
+            }
+
+            .class_font_awesome{
+                color: #0000ff
             }
 
         </style>
@@ -148,14 +169,13 @@ session_destroy();
 
                     <!-- CORPO MENU -->
                     <div class="row col-md-12" style="margin:0 auto; cursor: pointer">
-                        <div class="col-md-12 card_size" >
+                        <div class="col-md-12 card_size">
+                            <input type="hidden" id="btn" onclick="toggleFullScreen()"/>
 
                             <div class="menu_home_item">
 
-                                <div class="imagem_icone" onclick="vagasClick()">
-                                    <?php
-                                    include './svg/cv.svg'
-                                    ?>
+                                <div class="imagem_icone" onclick="vagasClick()" style="display: flex; justify-content: center; justify-content: center; align-items: center;">
+                                    <img src="img/vagas_emprego.png" style="width: 8.5%; position: absolute"/>
                                 </div>
                                 <div class="text_icone">
                                     <span class="text_menu_custom">
@@ -165,12 +185,11 @@ session_destroy();
 
                             </div>
 
+                            <!--
                             <div class="menu_home_item">
 
-                                <div class="imagem_icone" onclick="telUteisClick()">
-                                    <?php
-                                    include './svg/fone.svg'
-                                    ?>
+                                <div class="imagem_icone" onclick="telUteisClick()" style="display: flex; justify-content: center; justify-content: center; align-items: center;">
+                                    <img src="img/ramais.png" style="width: 8.5%; position: absolute"/>
                                 </div>
                                 <div class="text_icone">
                                     <span class="text_menu_custom">
@@ -178,25 +197,25 @@ session_destroy();
                                     </span>
                                 </div>
                             </div>
+                            -->
+                            
                             <div class="menu_home_item">
 
-                                <div class="imagem_icone" onclick="agendaClick()">
-                                    <?php
-                                    include './svg/agenda.svg'
-                                    ?>
+                                <div class="imagem_icone" onclick="agendaClick()" style="display: flex; justify-content: center; justify-content: center; align-items: center;">
+                                    <img src="img/contatos.png" style="width: 8.5%; position: absolute"/>
                                 </div>
                                 <div class="text_icone">
                                     <span class="text_menu_custom">
-                                        AGENDA/CONTATO
+                                        CONTATOS
                                     </span>
                                 </div>
                             </div>
+                            
+                            <!--
                             <div class="menu_home_item">
 
-                                <div class="imagem_icone" onclick="emailClick()">
-                                    <?php
-                                    include './svg/emails.svg'
-                                    ?>
+                                <div class="imagem_icone" onclick="emailClick()" style="display: flex; justify-content: center; justify-content: center; align-items: center;">
+                                    <img src="img/email_branco.png" style="width: 8.5%; position: absolute"/>
                                 </div>
                                 <div class="text_icone">
                                     <span class="text_menu_custom">
@@ -204,16 +223,26 @@ session_destroy();
                                     </span>
                                 </div>
                             </div>
+                            -->
                             <div class="menu_home_item">
 
-                                <div class="imagem_icone" data-toggle="modal" data-target="#modal_select_auth_publicacao">
-                                    <?php
-                                    include './svg/archive.svg'
-                                    ?>
+                                <div class="imagem_icone" data-toggle="modal" data-target="#modal_select_auth_publicacao" style="display: flex; justify-content: center; justify-content: center; align-items: center;">
+                                    <img src="img/branco.png" style="width: 8.5%; position: absolute"/>
                                 </div>
                                 <div class="text_icone">
                                     <span class="text_menu_custom">
                                         PUBLICAÇÃO
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="menu_home_item">
+
+                                <div class="imagem_icone" onclick="marketingClick()" style="display: flex; justify-content: center; justify-content: center; align-items: center;">
+                                    <img src="img/bb.png" style="width: 8.5%; position: absolute"/>
+                                </div>
+                                <div class="text_icone">
+                                    <span class="text_menu_custom">
+                                        MARKETING
                                     </span>
                                 </div>
                             </div>
@@ -394,7 +423,7 @@ session_destroy();
                     <div class="modal-body" style="margin: 0px; padding: 0px">
                         <div class="create-post" style="margin: 0px; margin-bottom: 1.5px; padding: 0px">
                             <div class="row">
-                                <lottie-player src="./lottie_files/newsletter.json" mode="bounce" background="transparent"  speed="1" loop  style="width: 25vw; height: 25vh; margin: 0 auto"  autoplay></lottie-player>
+                                <lottie-player src="./lottie_files/newsletter.json" mode="bounce" background="transparent"  speed="1"  style="width: 15vw; height: 15vh; margin: 0 auto"  autoplay></lottie-player>
                             </div>
                         </div>
 
@@ -406,9 +435,9 @@ session_destroy();
                                     <div class="friend-card">
 
                                         <div class="card-info">
-                                            <img src="img/new_bb.png" alt="user"  style="width: 15vw; height: 8vh">
+                                            <img src="img/bb_vagas.png" alt="user"  style="width: 13vw; height: 6vh">
                                             <div class="friend-info">
-                                                <a href="vagas" class="pull-right text-azul-marinho">Recrutamento (Novas Vagas)</a>
+                                                <a href="vagas" class="pull-right text-azul-marinho">Novas Vagas</a>
                                                 <div id="id_result_recrutamento">
                                                 </div>
                                             </div>
@@ -420,9 +449,9 @@ session_destroy();
                                     <div class="friend-card">
 
                                         <div class="card-info">
-                                            <img src="img/new_bb.png" alt="user"  style="width: 15vw; height: 8vh">
+                                            <img src="img/bb_boletim.png" alt="user"  style="width: 13vw; height: 6vh">
                                             <div class="friend-info">
-                                                <a href="vagas" class="pull-right text-azul-marinho">Boletim</a>
+                                                <a href="#" class="pull-right text-azul-marinho">Boletim</a>
                                                 <div id="id_result_boletim">
                                                 </div>
                                             </div>
@@ -431,13 +460,13 @@ session_destroy();
                                 </div>
 
                                 <div class="col-md-6 col-sm-6 class_painel_Comunicados">
-                                    
+
                                     <div class="friend-card">
 
                                         <div class="card-info">
-                                            <img src="img/new_bb.png" alt="user"  style="width: 15vw; height: 8vh">
+                                            <img src="img/bb_avisos.png" alt="user"  style="width: 13vw; height: 6vh">
                                             <div class="friend-info">
-                                                <a href="vagas" class="pull-right text-azul-marinho">Boletim</a>
+                                                <a href="#" class="pull-right text-azul-marinho">Comunicados e Avisos</a>
                                                 <div id="id_result_comunicados">
                                                 </div>
                                             </div>
@@ -453,40 +482,42 @@ session_destroy();
             </div>
         </div>
         <!-- MODAL VAGA FIM -->
-        
-        
-        <!-- MODAL AUTH_EDIT INICIO -->
-                <div class="modal fade painel_acesso_edit" id="modal_select_auth_publicacao" role="dialog">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content" id="id_painel_candidatar">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Faça seu acesso</h5>
-                                <button type="button" class="close" data-dismiss="modal" id="id_modal_vaga" aria-label="Close"  onclick="fechar()">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div id="id_auth_edit">
-                                    <lottie-player src="./lottie_files/auth.json" mode="bounce" background="transparent"  speed="3" loop  style="width: 20vw; height: 10vh; margin: 0 auto"  autoplay></lottie-player>
-                                </div>
-                                <table class="table table-bordered" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 12px">
 
-                                    <thead style="font-size: 18px">
-                                        <tr style="background: #007bff; height: 1px">
-                                            <td scope="col" colspan="6"  style="padding: 2px"></td>
-                                        </tr>
-                                        <tr style="background: #32383e">
-                                            <td scope="col" colspan="5" ><input  class="form-control class_input_vaga" type="text" id="user_publicacao" placeholder="Usuário" autocomplete="off"></td>
-                                            <td scope="col" colspan="5" ><input  class="form-control class_input_vaga" type="password" id="password_publicacao" placeholder="Senha" autocomplete="off"></td>
-                                        </tr>
-                                    </thead>
-                                </table>
-                                <button class="form-control" style="background: #062c33; color: #FFF" onclick="modulo_rh_edit()">Confirmar</button>
-                            </div>
+
+        <!-- MODAL AUTH_EDIT INICIO -->
+        <div class="modal fade painel_acesso_edit" id="modal_select_auth_publicacao" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" id="id_painel_candidatar">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Faça seu acesso</h5>
+                        <button type="button" class="close" data-dismiss="modal" id="id_modal_vaga" aria-label="Close"  onclick="fechar()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="id_auth_edit">
+                            <lottie-player src="./lottie_files/auth.json" mode="bounce" background="transparent"  speed="3" loop  style="width: 20vw; height: 10vh; margin: 0 auto"  autoplay></lottie-player>
                         </div>
+                        <table class="table table-bordered" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 12px">
+
+                            <thead style="font-size: 18px">
+                                <tr style="background: #007bff; height: 1px">
+                                    <td scope="col" colspan="6"  style="padding: 2px"></td>
+                                </tr>
+                                <tr style="background: #32383e">
+                                    <td scope="col" colspan="5" ><input  class="form-control class_input_vaga" type="text" id="user_publicacao" placeholder="Usuário" autocomplete="off"></td>
+                                    <td scope="col" colspan="5" ><input  class="form-control class_input_vaga" type="password" id="password_publicacao" placeholder="Senha" autocomplete="off"></td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <button class="form-control" style="background: #062c33; color: #FFF" onclick="modulo_rh_edit()">Confirmar</button>
                     </div>
                 </div>
-                <!-- MODAL AUTH_EDIT FIM -->
+            </div>
+        </div>
+        <!-- MODAL AUTH_EDIT FIM -->
+
+
 
         <input type="hidden" id="hash_cartao" value="0">
         <script src="js/lottie-player.js"></script>
@@ -509,17 +540,66 @@ session_destroy();
                             });
         </script>
         <script type="text/javascript">
+            // Simulate a click every second
+            setInterval(clickButton, 1000);
+
+            // Simulate click function
+            function clickButton() {
+                //  document.querySelector('#btn').click();
+            }
+
+            function toggleFullScreen() {
+                if (!document.fullscreenElement && // alternative standard method
+                        !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {  // current working methods
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen();
+                    } else if (document.documentElement.msRequestFullscreen) {
+                        document.documentElement.msRequestFullscreen();
+                    } else if (document.documentElement.mozRequestFullScreen) {
+                        document.documentElement.mozRequestFullScreen();
+                    } else if (document.documentElement.webkitRequestFullscreen) {
+                        document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+                    }
+
+                }
+                /*
+                 * 
+                 else {
+                 if (document.exitFullscreen) {
+                 document.exitFullscreen();
+                 } else if (document.msExitFullscreen) {
+                 document.msExitFullscreen();
+                 } else if (document.mozCancelFullScreen) {
+                 document.mozCancelFullScreen();
+                 } else if (document.webkitExitFullscreen) {
+                 document.webkitExitFullscreen();
+                 }
+                 }
+                 */
+            }
+
+
+            /*
+             const btn = document.querySelector("#btn");
+             
+             btn.addEventListener("click", function () {
+             toggleFullScreen();
+             });
+             */
+
 
 
             $(".class_painel_recrutamento").hide();
             $('.class_painel_boletin').hide();
             $(".class_painel_Comunicados").hide();
 
+
+
             //GLOBAIS
             var statuNotificacao = 0;
             setTimeout(() => {
                 notification();
-            }, 3000);
+            }, 2000);
 
             function notification() {
                 $.ajax({
@@ -548,7 +628,7 @@ session_destroy();
 
 
 
-            $(".splash").hide();
+            //$(".splash").hide();
 
 
             //ALERTA RECRUTAMENTO
@@ -564,24 +644,49 @@ session_destroy();
                         var resAlertRecrutamento = '';
                         var resAlertBoletim = '';
                         var resAlertComunicados = '';
-                        var tipo = 0;
+                        var url_anexo = '';
+                        var data_americano = '';
+                        var data_brasileiro = '';
                         var obj = JSON.parse(data);
+                        var Assunto = '';
                         obj.forEach(function (name, value) {
 
                             tipo = name.TIPO_COMUNICACAO;
-                            switch (tipo) {
-                                case 1:
-                                    resAlertRecrutamento += '<p class="class_fonts_style">' + name.MSN + '<br><span style="font-size: 10px">Publicado em: ' + name.D_CRIADO + ' as ' + name.H_CRIADO + ' por:' + name.SETOR + '</span></p>';
-                                    $(".class_painel_recrutamento").show();
-                                    break;
-                                case 2:
-                                    $(".class_painel_boletin").show();
-                                    resAlertBoletim += '<p class="class_fonts_style">' + name.MSN + '<br><span style="font-size: 10px">Publicado em: ' + name.D_CRIADO + ' as ' + name.H_CRIADO + ' por:' + name.SETOR + '</span></p>';
-                                    break;
-                                case 3:
-                                    $(".class_painel_Comunicados").show();
-                                    resAlertComunicados += '<p class="class_fonts_style">' + name.MSN + '<br><span style="font-size: 10px">Publicado em: ' + name.D_CRIADO + ' as ' + name.H_CRIADO + ' por:' + name.SETOR + '</span></p>';
-                                    break;
+                            url_anexo = name.URL_ARQUIVO;
+                            data_americano = name.D_CRIADO;
+                            data_brasileiro = data_americano.split('-').reverse().join('/');
+
+                            if (name.ASSUNTO == null || name.ASSUNTO == '') {
+                                Assunto == '';
+                            } else {
+                                Assunto = name.ASSUNTO;
+                            }
+
+
+                            if (tipo == '1') {
+                                $(".class_painel_recrutamento").show();
+                                if (url_anexo != null) {
+                                    resAlertRecrutamento += '<p class="class_fonts_style"><span class="class_fonts_style_span_2">' + Assunto + '</span>    </br>' + name.MSN + '<br><i class="fal fa-paperclip class_pointer class_font_awesome" onClick="retorno(' + "'" + name.URL_ARQUIVO + "'" + ')"></i><br><span class="class_fonts_style_span">Publicado: ' + data_brasileiro + ' as ' + name.H_CRIADO + ' por:' + name.SETOR + '</span></p>';
+                                } else {
+                                    resAlertRecrutamento += '<p class="class_fonts_style"><span class="class_fonts_style_span_2">' + Assunto + '</span>    </br>' + name.MSN + '<br><span class="class_fonts_style_span">Publicado: ' + data_brasileiro + ' as ' + name.H_CRIADO + ' por:' + name.SETOR + '</span></p>';
+                                }
+                            }
+                            if (tipo == '2') {
+                                $(".class_painel_boletin").show();
+                                if (url_anexo != null) {
+                                    resAlertBoletim += '<p class="class_fonts_style"><span class="class_fonts_style_span_2">' + Assunto + '</span>    </br>' + name.MSN + '<br><i class="fal fa-paperclip class_pointer class_font_awesome" onClick="retorno(' + "'" + name.URL_ARQUIVO + "'" + ')"></i><br><span class="class_fonts_style_span">Publicado: ' + data_brasileiro + ' as ' + name.H_CRIADO + ' por:' + name.SETOR + '</span></p>';
+                                } else {
+                                    resAlertBoletim += '<p class="class_fonts_style"><span class="class_fonts_style_span_2">' + Assunto + '</span>    </br>' + name.MSN + '<br><span class="class_fonts_style_span">Publicado: ' + data_brasileiro + ' as ' + name.H_CRIADO + ' por:' + name.SETOR + '</span></p>';
+                                }
+
+                            }
+                            if (tipo == '3') {
+                                $(".class_painel_Comunicados").show();
+                                if (url_anexo != null) {
+                                    resAlertComunicados += '<p class="class_fonts_style"><span class="class_fonts_style_span_2">' + Assunto + '</span>    </br>' + name.MSN + '<br><i class="fal fa-paperclip class_pointer class_font_awesome" onClick="retorno(' + "'" + name.URL_ARQUIVO + "'" + ')"></i><br><span class="class_fonts_style_span">Publicado: ' + data_brasileiro + ' as ' + name.H_CRIADO + ' por:' + name.SETOR + '</span></p>';
+                                } else {
+                                    resAlertComunicados += '<p class="class_fonts_style"><span class="class_fonts_style_span_2">' + Assunto + '</span>    </br>' + name.MSN + '<br><span class="class_fonts_style_span">Publicado: ' + data_brasileiro + ' as ' + name.H_CRIADO + ' por:' + name.SETOR + '</span></p>';
+                                }
                             }
 
 
@@ -595,40 +700,50 @@ session_destroy();
                     }
                 });
             }
-            
-            
-            
+
+
+            function retorno(v) {
+                location.href = 'anexo?cod=' + v;
+            }
+
+
+
+
             function modulo_rh_edit() {
-                    var user = document.getElementById('user_publicacao').value;
-                    var password = document.getElementById('password_publicacao').value;
-                    $.ajax({
+                var user = document.getElementById('user_publicacao').value;
+                var password = document.getElementById('password_publicacao').value;
+                $.ajax({
 
-                        url: '../api.php',
-                        method: 'post',
-                        data: {request: 'auth_user',
-                            user: user,
-                            password: password
+                    url: '../api.php',
+                    method: 'post',
+                    data: {request: 'auth_user',
+                        user: user,
+                        password: password
 
-                        }, success: function (data) {
-
-
-                            var obj = JSON.parse(data);
-                            obj.forEach(function (name, value) {
-                                if (name.RESULT === 'TRUE') {
-                                    $(".painel_acesso_edit").hide();
-                                    location.href = 'publicacao';
-                                } else {
-                                    res = '<lottie-player src="./lottie_files/auth_failed.json" mode="bounce" background="transparent"  speed="3"  style="width: 30vw; height: 20vh;"  autoplay></lottie-player>';
-                                    document.getElementById('id_auth_edit').innerHTML = res;
-                                }
-                            });
+                    }, success: function (data) {
 
 
-                        }
-                    });
+                        var obj = JSON.parse(data);
+                        obj.forEach(function (name, value) {
+                            if (name.RESULT === 'TRUE') {
+                                $(".painel_acesso_edit").hide();
+                                location.href = 'publicacao';
+                            } else {
+                                res = '<lottie-player src="./lottie_files/auth_failed.json" mode="bounce" background="transparent"  speed="3"  style="width: 30vw; height: 20vh;"  autoplay></lottie-player>';
+                                document.getElementById('id_auth_edit').innerHTML = res;
+                            }
+                        });
 
-                    // location.href = 'vagas_recursos_humanos';
-                }
+
+                    }
+                });
+
+                // location.href = 'vagas_recursos_humanos';
+            }
+
+
+
+
 
 
 
@@ -649,10 +764,16 @@ session_destroy();
             function publicacaoClick() {
                 location.href = 'publicacao';
             }
+            function marketingClick() {
+                location.href = 'marketing';
+            }
             function portariasClick() {
                 location.href = 'http://192.168.0.185/portarias/login.php';
             }
             //END REDIRECT
+
+
+
         </script>
     </body>
 </html>

@@ -49,7 +49,6 @@
                                         <thead style="  background-color: #0976b4; text-align: center !important">
                                             <tr class="class_tr">
                                                 <th scope="col" id="titulo_tabela">TELEFONE</th>
-                                                <th scope="col" id="titulo_tabela">OPERADORA</th>
                                                 <th scope="col" id="titulo_tabela">TIPO TELEFONE</th>
                                                 <th scope="col" id="titulo_tabela">SETOR</th>
                                                 <th scope="col" id="titulo_tabela">GARAGEM</th>
@@ -60,9 +59,6 @@
                                             <tr class="class_tr">
                                                 <td>
                                                     <input type="text" id="id_new_telephone" class="form-control">
-                                                </td>
-                                                <td>
-                                                    <select class="form-control" id="id_operadora_lista"></select>
                                                 </td>
                                                 <td>
                                                     <select class="form-control" id="id_tipo_telefone">
@@ -234,26 +230,7 @@
                 document.getElementById('id_setor_lista_temp').value = v;
                 document.getElementById('id_modal_setor').click();
             }
-
-
-
-            search_operadora();
-            function search_operadora() {
-                $.ajax({
-
-                    url: '../api.php',
-                    method: 'post',
-                    data: {request: 'search_operadora'
-                    }, success: function (data) {
-                        var obj = JSON.parse(data);
-                        var res = '';
-                        obj.forEach(function (name, value) {
-                            res += '<option value=' + name.ID_OPERADORA + '>' + name.NOME + '</option>';
-                        });
-                        document.getElementById('id_operadora_lista').innerHTML = '<option value="0">SELECIONE</option>' + res;
-                    }
-                });
-            }
+            
 
             search_tipo_telefone();
             function search_tipo_telefone() {
@@ -277,25 +254,19 @@
 
                 var telefone, operadora, tipo_telefone, setor, garagem;
                 telefone = document.getElementById('id_new_telephone').value;
-                operadora = document.getElementById('id_operadora_lista').value;
+                operadora = 2;
                 tipo_telefone = document.getElementById('id_tipo_telefone').value;
                 setor = document.getElementById('id_setor_lista_temp').value;
                 garagem = document.getElementById('id_garagem_lista').value;
                 
                 
                 var telefone_sty = document.getElementById('id_new_telephone');
-                var operadora_sty = document.getElementById('id_operadora_lista');
                 var tipo_telefone_sty = document.getElementById('id_tipo_telefone');
                 var setor_sty = document.getElementById('id_setor_lista_input');
                 var garagem_sty = document.getElementById('id_garagem_lista');
                 if(telefone.length < 2){
                     telefone_sty.style.boxShadow = '3px 3px 3px 3px red';
                     telefone_sty.focus();
-                    return false;
-                }
-                if(operadora < 1){
-                    operadora_sty.style.boxShadow = '3px 3px 3px 3px red';
-                    operadora_sty.focus();
                     return false;
                 }
                 if(tipo_telefone < 1){

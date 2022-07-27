@@ -135,7 +135,7 @@
                                                                 </tbody>
                                                                 <thead style="font-size: 18px">
                                                                     <tr style="background: #007bff">
-                                                                        <td scope="col" colspan="5" >DETALHE DA VAGA</td>
+                                                                        <td scope="col" colspan="5" >DETALHE DA VAGA  <span class="panel_anexo" id="id_anexo_url"><i class="fal fa-paperclip class_pointer class_font_awesome" onClick="anexoUrl()" style="color: red">anexo</i></span></td>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody id="id_res_detalhe_vaga">
@@ -204,7 +204,7 @@
                                                             </div>
                                                         </div>
 
-                                                        
+
 
 
 
@@ -332,7 +332,7 @@
                     </div>
                 </div>
                 <!-- MODAL AUTH FIM -->
-                
+
                 <!-- MODAL AUTH_EDIT INICIO -->
                 <div class="modal fade painel_acesso_edit" id="modal_select_auth_edit" role="dialog">
                     <div class="modal-dialog" role="document">
@@ -365,7 +365,7 @@
                     </div>
                 </div>
                 <!-- MODAL AUTH_EDIT FIM -->
-                
+
 
             </div>
             <!-- /#page-content-wrapper -->
@@ -391,7 +391,7 @@
         </script>
         <script type="text/javascript">
 
-            $("tr").addClass("bar_top"); //CSS PARA ESTRUTURA DAS TABELAS
+            $('.panel_anexo').hide();
 
             // EVENTOS
             $(".class_erro_dados").hide();
@@ -441,6 +441,7 @@
                 $(".class_btn_editar").show();
                 $(".class_btn_registrar").hide();
                 $(".class_btn_salvar").hide();
+                $(".panel_anexo").hide();
                 location.reload();
             }
 
@@ -480,6 +481,7 @@
                         var detalhe = '';
                         var hash_id_vagas_emprego = '';
                         var hash_emprego = '';
+                        var url = '';
                         obj.forEach(function (name, value) {
 
                             //console.log(name.ENDERECO);
@@ -487,14 +489,25 @@
                             detalhe = '<tr><td colspan="5">' + name.DESCRICAO + '</td></tr>';
                             hash_id_vagas_emprego = name.HASH_ID_VAGAS;
                             hash_emprego = name.HASH_COMUNICACAO;
+                            url = name.URL;
+
                         });
                         document.getElementById('id_res_vaga').innerHTML = res;
                         document.getElementById('id_res_detalhe_vaga').innerHTML = detalhe;
                         document.getElementById('id_vagas_emprego_temp').value = hash_id_vagas_emprego;
                         document.getElementById('id_hash_emprego_temp').value = hash_emprego;
+                        document.getElementById('id_anexo_url').value = url;
+                        if (url !== null) {
+                            $('.panel_anexo').show();
+                        }
 
                     }
                 });
+            }
+
+            function anexoUrl() {
+                var an = document.getElementById('id_anexo_url').value;
+                retAnexo(an);
             }
 
 
@@ -560,11 +573,11 @@
                 doc = document.getElementById('id_doc_candidato_vaga').value;
                 vaga = document.getElementById('id_vagas_emprego_temp').value;
                 email = document.getElementById('id_email_candidato_vaga').value;
-                
-                if(vaga.length < 1){
+
+                if (vaga.length < 1) {
                     alert('POR FAVOR, SELECIONE A VAGA NOVAMENTE!');
                 }
-                
+
                 if (email.length > 0 && !email.includes("@") && !email.includes(".com")) {
                     alert(email + ' NÃO É UM EMAIL VÁLIDO!');
                     email_style.focus();
@@ -681,8 +694,8 @@
                         password: password
 
                     }, success: function (data) {
-                        
-                        
+
+
                         var obj = JSON.parse(data);
                         obj.forEach(function (name, value) {
                             if (name.RESULT === 'TRUE') {
@@ -692,17 +705,17 @@
                                 document.getElementById('id_auth').innerHTML = res;
                             }
                         });
-                        
-                        
+
+
                     }
                 });
 
                 // location.href = 'vagas_recursos_humanos';
             }
-            
-            
-            
-             function modulo_rh_edit() {
+
+
+
+            function modulo_rh_edit() {
                 var user = document.getElementById('user_edit').value;
                 var password = document.getElementById('password_edit').value;
                 $.ajax({
@@ -714,8 +727,8 @@
                         password: password
 
                     }, success: function (data) {
-                        
-                        
+
+
                         var obj = JSON.parse(data);
                         obj.forEach(function (name, value) {
                             if (name.RESULT === 'TRUE') {
@@ -726,12 +739,17 @@
                                 document.getElementById('id_auth_edit').innerHTML = res;
                             }
                         });
-                        
-                        
+
+
                     }
                 });
 
                 // location.href = 'vagas_recursos_humanos';
+            }
+
+
+            function retAnexo(v) {
+                location.href = 'anexo?cod=' + v +'&cod_page=pvaga';
             }
 
 

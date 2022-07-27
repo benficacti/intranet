@@ -67,7 +67,7 @@
 
             <!-- Sidebar -->
             <?php
-            $page = 'publicar_vaga'; // HABILITAR MENU NA TELA ATUAL
+            $page = 'vagas_candidatos'; // HABILITAR MENU NA TELA ATUAL
             include 'includes/sidebar.php';
             ?>
 

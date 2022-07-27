@@ -40,7 +40,7 @@
 
                 <div class="container-fluid">
                     <div class="col-md-11 text-center" style="margin:0 auto; height:30px; margin-top: 2vh;">
-                        <label class="title_cartoes_pendentes text-title-table class_title">AGENDA CONTATO</label>
+                        <label class="title_cartoes_pendentes text-title-table class_title">CADASTRO DE CONTATO</label>
                     </div>
                     <div class="col-md-12">
                         <div class="card">
@@ -52,6 +52,7 @@
                                             <tr class="class_tr">
                                                 <th scope="col" id="titulo_tabela">NOME</th>
                                                 <th scope="col" id="titulo_tabela">TELEFONE</th>
+                                                <th scope="col" id="titulo_tabela">RAMAL</th>
                                                 <th scope="col" id="titulo_tabela">EMAIL</th>
                                                 <th scope="col" id="titulo_tabela">SETOR</th>
                                                 <th scope="col" id="titulo_tabela">STATUS</th>
@@ -67,8 +68,10 @@
                                                 <td>
                                                     <input type="hidden" id="id_new_tel_agenda_temp">
                                                     <input type="text"  id="id_new_tel_agenda" placeholder="SELECIONE TELEFONE" data-toggle="modal" data-target="#modal_select_telefone" onkeyup="search_telefone()"  class="form-control" autocomplete="off">
-
-
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" id="id_new_ramal_agenda_temp">
+                                                    <input type="text"  id="id_new_ramal_agenda" placeholder="SELECIONE RAMAL" data-toggle="modal" data-target="#modal_select_ramal" onkeyup="search_ramal()"  class="form-control" autocomplete="off">
                                                 </td>
                                                 <td>
                                                     <input type="hidden" id="id_new_email_agenda_temp"/>
@@ -79,9 +82,8 @@
                                                     <input type="text"  id="id_new_setor_agenda" placeholder="SELECIONE EMAIL" data-toggle="modal" data-target="#modal_select_setor" onkeyup="search_setor()"  class="form-control" autocomplete="off">
                                                 </td>
                                                 <td><select class="form-control" id="id_new_status_agenda">
-                                                        <option value="0">SELECIONE</option>
                                                         <option value="1">ASSOCIAR</option>
-                                                        <option value="2">DESASSOCIAR</option>
+                                                        <!--<option value="2">DESASSOCIAR</option>-->
                                                         <option value="3">DESATIVAR</option>
                                                     </select>
                                                 </td>
@@ -185,7 +187,7 @@
                                                 <td scope="col" colspan="5" ></td>
                                             </tr>
                                             <tr style="background: #007bff">
-                                                <td scope="col" colspan="5" ><input  class="form-control " type="text" id="id_new_tel_input_agenda" onkeyup="search_nome_agenda()" placeholder="PESQUISE" autocomplete="off"></td>
+                                                <td scope="col" colspan="5" ><input  class="form-control " type="text" id="id_new_tel_input_agenda" onkeyup="search_telefone()" placeholder="PESQUISE" autocomplete="off"></td>
                                             </tr>
                                         </thead>
                                         <tbody class="class_painel_descricao_update class_pointer" id="list_new_tel_agenda">
@@ -196,6 +198,37 @@
                         </div>
                     </div>
                     <!-- MODAL TELEFONE FIM -->
+
+
+                    <!-- MODAL RAMAL INICIO -->
+                    <div class="modal fade" id="modal_select_ramal" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content" id="">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" id="id_modal_ramal" aria-label="Close"  onclick="fechar()">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-bordered" style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 12px">
+
+                                        <thead style="font-size: 18px">
+                                            <tr style="background: #007bff">
+                                                <td scope="col" colspan="5" ></td>
+                                            </tr>
+                                            <tr style="background: #007bff">
+                                                <td scope="col" colspan="5" ><input  class="form-control " type="text" id="id_new_ramal_input_agenda" onkeyup="search_ramal()" placeholder="PESQUISE" autocomplete="off"></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="class_painel_descricao_update class_pointer" id="list_new_ramal_agenda">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- MODAL RAMAL FIM -->
 
                     <!-- MODAL EMAIL INICIO -->
                     <div class="modal fade" id="modal_select_email" role="dialog">
@@ -345,6 +378,14 @@
                 document.getElementById('id_modal_telefone').click();
             }
 
+            function retornoRamal(v, v2) {
+                document.getElementById('id_new_ramal_agenda_temp').value = v2;
+                document.getElementById('id_new_ramal_agenda').value = v2;
+                document.getElementById('id_new_ramal_input_agenda').value = '';
+                search_telefone();
+                document.getElementById('id_modal_ramal').click();
+            }
+
             function retornoEmail(v, v2) {
                 document.getElementById('id_new_email_agenda_temp').value = v;
                 document.getElementById('id_new_email_agenda').value = v2;
@@ -366,11 +407,14 @@
 
             search_telefone();
             function search_telefone() {
+                var tel = document.getElementById('id_new_tel_input_agenda').value;
+
                 $.ajax({
 
                     url: '../api.php',
                     method: 'post',
-                    data: {request: 'search_telefone'
+                    data: {request: 'search_telefone',
+                        tel: tel
                     }, success: function (data) {
 
                         var obj = JSON.parse(data);
@@ -378,13 +422,48 @@
                         obj.forEach(function (name, value) {
                             if (name.RESULT == 'TRUE') {
                                 //console.log(name.HASH);
-                                res += '<tr style="background-color: #FFF"><td onClick="retornoTelefone(' + "'" + name.HASH_PRIVATE_TELEFONE + "'" + ',' + "'" + +name.TELEFONE + "'" + ')">' + +name.TELEFONE + '</td></tr>';
+                                res += '<tr style="background-color: #FFF"><td onClick="retornoTelefone(' + "'" + name.HASH_PRIVATE_TELEFONE + "'" + ',' + "'" + name.TELEFONE + "'" + ')">' + name.TELEFONE + '</td></tr>';
                             } else {
                                 res += '<tr style="background-color: #FFA500; color: #FFF"><td>NÃO HÁ TELEFONE LIBERADO</td></tr>';
                             }
 
                         });
                         document.getElementById('list_new_tel_agenda').innerHTML = res;
+                    }
+                });
+            }
+
+
+            search_ramal();
+            function search_ramal() {
+                var tel = document.getElementById('id_new_ramal_input_agenda').value;
+
+                $.ajax({
+
+                    url: '../api.php',
+                    method: 'post',
+                    data: {request: 'search_ramal',
+                        tel: tel
+                    }, success: function (data) {
+
+                        var obj = JSON.parse(data);
+                        var res = '';
+                        var ramal_length = '';
+                        obj.forEach(function (name, value) {
+                            ramal_length = name.TELEFONE;
+                            if (ramal_length.length == 4) {
+                                if (name.RESULT == 'TRUE') {
+                                    //console.log(name.HASH);
+                                    res += '<tr style="background-color: #FFF"><td onClick="retornoRamal(' + "'" + name.HASH_PRIVATE_TELEFONE + "'" + ',' + "'" + ramal_length + "'" + ')">' + ramal_length + '</td></tr>';
+                                } else {
+                                    res += '<tr style="background-color: #FFA500; color: #FFF"><td>NÃO HÁ RAMAL LIBERADO</td></tr>';
+                                }
+                            }
+
+
+
+                        });
+                        document.getElementById('list_new_ramal_agenda').innerHTML = res;
                     }
                 });
             }
@@ -445,13 +524,13 @@
 
 
             function register_agenda() {
-                var nome, telefone, email, status_agenda;
+                var nome, telefone, email, status_agenda, ramal;
                 nome = document.getElementById('id_new_nome_agenda').value;
                 telefone = document.getElementById('id_new_tel_agenda_temp').value;
+                ramal = document.getElementById('id_new_ramal_agenda_temp').value;
                 email = document.getElementById('id_new_email_agenda_temp').value;
                 setor = document.getElementById('id_new_setor_agenda_temp').value;
                 status_agenda = document.getElementById('id_new_status_agenda').value;
-
 
 
                 $.ajax({
@@ -461,20 +540,22 @@
                     data: {request: 'register_agenda',
                         nome: nome,
                         telefone: telefone,
+                        ramal: ramal,
                         email: email,
                         setor: setor,
                         status_agenda: status_agenda
 
                     }, success: function (data) {
-                        console.log(data);
 
+
+                        console.log(data);
                         var obj = JSON.parse(data);
                         obj.forEach(function (name, value) {
-
-                            if (name.RESULT == 'TRUE') {
+                            if (name.RESULT == "TRUE") {
                                 location.reload();
                             }
                         });
+
 
                     }
                 });
@@ -507,6 +588,7 @@
 
                                 if (name.RESULT == 'TRUE') {
                                     document.getElementById('id_new_tel_agenda').value = name.N_TELEFONE;
+                                    document.getElementById('id_new_tel_agenda_temp').value = name.HASH_PRIVATE_TELEFONE;
                                 } else {
                                     document.getElementById('id_new_tel_agenda').value = '';
                                 }
@@ -516,7 +598,36 @@
 
                     mostrar_email_associado();
                     mostrar_setor_associado();
+                    mostrar_ramal_associado();
                 }
+            }
+
+
+
+            function mostrar_ramal_associado() {
+                var nome = document.getElementById('id_new_nome_agenda').value;
+                $.ajax({
+
+                    url: "../api.php",
+                    method: "post",
+                    data: {request: "mostrar_ramal_associado",
+                        nome: nome
+
+                    }, success: function (data) {
+                        console.log(data);
+                        var obj = JSON.parse(data);
+                        obj.forEach(function (name, value) {
+                            //console.log(name.ENDERECO);
+
+                            if (name.RESULT == 'TRUE') {
+                                document.getElementById('id_new_ramal_agenda').value = name.NUM_RAMAL;
+                                document.getElementById('id_new_ramal_agenda_temp').value = name.NUM_RAMAL;
+                            } else {
+                                document.getElementById('id_new_ramal_agenda').value = '';
+                            }
+                        });
+                    }
+                });
             }
 
 
@@ -565,6 +676,7 @@
 
                             if (name.RESULT == 'TRUE') {
                                 document.getElementById('id_new_setor_agenda').value = name.D_SETOR;
+                                document.getElementById('id_new_setor_agenda_temp').value = name.HASH_PRIVATE_SETOR;
                             } else {
                                 document.getElementById('id_new_setor_agenda').value = '';
                             }

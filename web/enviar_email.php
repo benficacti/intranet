@@ -23,12 +23,11 @@ $mail->Password = 'Uh5nja5%';
 $mail->SingleTo = true;
 
 //INICIO
-
 $nome = filter_input(INPUT_GET, 'nome');
 $emailGet = filter_input(INPUT_GET, 'email');
 $msn = filter_input(INPUT_GET, 'msn');
 //$img = 'https://urbano.benficabbtt.com.br/wp-content/uploads/2015/11/logo-benfica.png';
-$img = 'http://192.168.0.185/intranet/web/img/new_bb.png';
+$img = 'https://192.168.0.185/intranet/web/img/new_bb.png';
 $hora = date('d/m/Y - H:i:s');
 //FIM
 
@@ -192,7 +191,7 @@ $mail->Body = '<div class="es-wrapper-color">
                                                                         <table width="100%" cellspacing="0" cellpadding="0">
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="adapt-img" src="' . $img . '" alt style="display: block;" width="133"></a></td>
+                                                                                    <td align="center" class="esd-block-image" style="font-size: 0px;"><a target="_blank"><img class="logo" src="'.$img.'" alt style="display: block;" width="133"></a></td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>

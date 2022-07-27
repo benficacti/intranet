@@ -5,6 +5,8 @@ $sessãoLogin = (isset($_SESSION['id_login'])) ? $_SESSION['id_login'] : null;
 if ($sessãoLogin == null) {
     header('Location: painel');
 }
+$perfil = $_SESSION['id_setor'];
+$page_type = filter_input(INPUT_GET, 'page');
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,7 +38,12 @@ if ($sessãoLogin == null) {
 
             <!-- Sidebar -->
             <?php
-            $page = 'publicacao'; // HABILITAR MENU NA TELA ATUAL
+            if ($page_type == 'm') {
+                $page = 'publicacao_marketing'; // HABILITAR MENU NA TELA ATUAL
+            } else {
+                $page = 'publicacao'; // HABILITAR MENU NA TELA ATUAL
+            }
+
             include 'includes/sidebar.php';
             ?>
 
@@ -64,6 +71,8 @@ if ($sessãoLogin == null) {
                                             <tr class="class_tr">
                                                 <th scope="col" id="titulo_tabela"><i class="fad fa-th"></i> GRUPO NOTÍCIA</th>
                                                 <th scope="col" id="titulo_tabela"><i class="fad fa-th"></i> EXPIRAR NOTÍCIA</th>
+                                                <th scope="col" id="titulo_tabela"><i class="fad fa-th"></i> ASSUNTO</th>
+                                                <th scope="col" id="titulo_tabela"><i class="fad fa-th"></i> ANEXO</th>
                                                 <th scope="col" id="titulo_tabela"><i class="fal fa-poll-people"></i>.</th>
                                             </tr>
                                         </thead>
@@ -71,12 +80,26 @@ if ($sessãoLogin == null) {
                                         <tbody id="id_texto_resultado" style="text-align: center !important">
                                             <tr class="class_tr">
                                                 <td>
+                                                    <input type="hidden" value="<?php echo $perfil; ?>" id="id_perfil_grupo_noticia" />
                                                     <input type="hidden" id="id_grupo_noticia_temp" />
                                                     <input type="text"  id="id_grupo_noticia" placeholder="SELECIONE TIPO COMUNICACAO" data-toggle="modal" data-target="#modal_select"  class="form-control" readonly="true" autocomplete="off">                                                    
                                                 </td>
                                                 <td>
                                                     <input type="datetime-local"  id="id_data_expirar" class="form-control">
-
+                                                </td>
+                                                <td>
+                                                    <input type="text"  id="id_assunto_noticia" placeholder="ASSUNTO"  class="form-control"  autocomplete="off">                                                    
+                                                </td>
+                                                <td>
+                                                    <p>
+                                                        <label class="form-control" for="fileToUpload" id="id_btn_anexar" style="background:#0069D9; color: #FFF; font-weight: bold"><i class="fal fa-paperclip"></i> ANEXAR (PDF)</label></p>
+                                                    <form action="../uploads_publicacao.php" method="post" enctype="multipart/form-data" id="id_form_geral">
+                                                        <input class="form-control" type="file"
+                                                               name="fileToUpload" id="fileToUpload" 
+                                                               onchange="loadFile(event)" 
+                                                               style="display: none">
+                                                        <input type="hidden" id="id_hash_anexo" name="tmpCod"/>
+                                                    </form>
                                                 </td>
                                                 <td>
                                                     <button class="form-control btn" id="id_btn_publicar_noticia" onclick="publicar_noticia()" style="background: #28a745; color: #FFF"  ><i class="fas fa-paper-plane"></i> PUBLICAR NOTÍCIA</button>
@@ -200,15 +223,16 @@ if ($sessãoLogin == null) {
                 //GLOBAL
 
 
-                search_setor();
-                function search_setor() {
-
+                search_tipo_comunicacao();
+                function search_tipo_comunicacao() {
+                    var setor = document.getElementById('id_perfil_grupo_noticia').value;
 
                     $.ajax({
 
                         url: '../api.php',
                         method: 'post',
-                        data: {request: 'search_tipo_comunicado'
+                        data: {request: 'search_tipo_comunicado',
+                            setor: setor
 
                         }, success: function (data) {
 
@@ -227,7 +251,7 @@ if ($sessãoLogin == null) {
                 function retorno(v, v2) {
                     document.getElementById('id_grupo_noticia').value = v2;
                     document.getElementById('id_grupo_noticia_temp').value = v;
-                    search_setor();
+                    search_tipo_comunicacao();
                     document.getElementById('id_modal_setor').click();
                 }
 
@@ -248,20 +272,33 @@ if ($sessãoLogin == null) {
                 function publicar_noticia() {
 
 
-                    var tipo_noticia, data_expirar_temp, hora_expirar, data_expirar;
+                    var tipo_noticia, data_expirar_temp, hora_expirar, data_expirar, arquivo, assunto;
+                    arquivo = document.getElementById('fileToUpload').value;
                     data_expirar_temp = document.getElementById('id_data_expirar').value;
                     descricao = document.getElementById('id_descricao_noticia').value;
                     tipo_noticia = document.getElementById('id_grupo_noticia_temp').value;
+                    assunto = document.getElementById('id_assunto_noticia').value;
 
                     hora_expirar = data_expirar_temp.slice(-5);
                     data_expirar = data_expirar_temp.slice(0, 10);
+
+                    tipo_arquivo = arquivo.slice(-4);//PEGAR TIPO DO ARQUIVO
 
                     if (tipo_noticia.length < 1) {
                         tipo_noticiaStyle = document.getElementById('id_grupo_noticia');
                         tipo_noticiaStyle.style.boxShadow = '3px 3px 3px 3px red';
                         tipo_noticiaStyle.focus();
-                         return false;
+
                     }
+
+                    if (tipo_arquivo.length > 0) {
+                        if (tipo_arquivo !== '.pdf') {
+                            alert('Favor anexar um arquivo em formato "PDF"');
+                            return false;
+                        }
+                    }
+
+
 
                     if (data_expirar_temp.length < 1) {
                         data_expirar_tempStyle = document.getElementById('id_data_expirar');
@@ -285,18 +322,22 @@ if ($sessãoLogin == null) {
                             tipo_noticia: tipo_noticia,
                             descricao: descricao,
                             data_expirar: data_expirar,
-                            hora_expirar: hora_expirar
+                            hora_expirar: hora_expirar,
+                            assunto: assunto
 
                         }, success: function (data) {
                             console.log(data);
                             var obj = JSON.parse(data);
                             obj.forEach(function (name, value) {
                                 if (name.RESULT) {
+                                    document.getElementById('id_hash_anexo').value = name.HASH_ID;
                                     document.getElementById('button_automatico_animation_check_publicar_noticia').click();
+                                    if (arquivo.length > 0) {
+                                        form.submit();
+                                    }
                                     setTimeout(() => {
                                         location.reload();
                                     }, 3000);
-
                                 }
 
                             });
@@ -306,6 +347,14 @@ if ($sessãoLogin == null) {
 
                 }
 
+
+                function loadFile() {
+                    var btn_anexar = document.getElementById('id_btn_anexar');
+                    btn_anexar.style.backgroundColor = '#4B0082';
+                    btn_anexar.style.color = '#FFF';
+                    btn_anexar.innerHTML = 'ANEXADO!!!';
+
+                }
 
             </script>
     </body>

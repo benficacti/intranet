@@ -36,12 +36,13 @@ if ($sessãoLogin == null) {
 
             <!-- Sidebar -->
             <?php
-            $page = 'visualizar_vaga'; // HABILITAR MENU NA TELA ATUAL
+            $page = 'vagas_recursos_humanos'; // HABILITAR MENU NA TELA ATUAL
             include 'includes/sidebar.php';
             ?>
 
             <!-- Page Content -->
             <div id="page-content-wrapper">
+                <label id="id_contador"></label>
 
                 <?php
                 include 'includes/navbar.php'
@@ -454,6 +455,12 @@ if ($sessãoLogin == null) {
 
                     tipo_arquivo = arquivo.slice(-4);//PEGAR TIPO DO ARQUIVO
 
+                    if (tipo_arquivo.length > 0) {
+                        if (tipo_arquivo !== '.pdf') {
+                            alert('Favor anexar um arquivo em formato "PDF"');
+                            return false;
+                        }
+                    }
 
 
                     //VALIDAÇÕES
@@ -606,6 +613,7 @@ if ($sessãoLogin == null) {
                     btn_anexar.innerHTML = 'ANEXADO!!!';
 
                 }
+
 
 
             </script>
